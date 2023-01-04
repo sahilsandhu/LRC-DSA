@@ -1,3 +1,83 @@
+// Add Last
+
+void addLast(Node head, int val){
+    if(head == null){
+        return new Node(val);
+    }
+    Node nn = new Node(val);
+    Node ptr = head;
+    while(ptr.next != null){
+        ptr = ptr.next;
+    }
+    ptr.next = nn;
+}
+
+// Add First
+
+void addFirst(Node head, int val){
+    if(head == null){
+        return new Node(val);
+    }
+    Node nn = new Node(val);
+    nn.next = head;
+    head = nn;
+}
+
+// Delete First
+
+int deleteFirst(Node head){
+    if(head == null){
+        return -1;
+    }
+    int val = head.val;
+    head = head.next;
+    return val;
+}
+
+// Delete Last
+
+int deleteLast(Node head){
+    if(head == null){
+        return -1;
+    }
+    Node ptr = head;
+    while(ptr.next.next != null){
+        ptr = ptr.next;
+    }
+    int val = ptr.next.val;
+    ptr.next.val = null;
+    return val;
+}
+
+// Add At Index
+
+void addAtIndex(Node head, int idx, int val){
+    if(idx == 0){
+        return addFirst(val);
+    }
+    Node prev = head, ptr = head;
+    while(ptr!=null && idx-- > 0){
+        prev = ptr;
+        ptr = ptr.next;
+    }
+    Node nn = new Node(val);
+    nn.next = ptr;
+    prev.next = nn;
+}
+
+// Remove At Index
+
+void removeAtIndex(Node head, int idx){
+    if(idx == 0){
+        return deleteFirst(head);
+    }
+    Node ptr = head;
+    while(ptr!=null && idx-- > 0){
+        ptr = ptr.next;
+    }
+    ptr.next = ptr.next.next;
+}
+
 // Find Mid of LL 
 
 import java.util.*;
@@ -845,5 +925,40 @@ class Main {
             System.out.print(head.val + " ");
             head = head.next;
         }
+    }
+}
+
+
+// Remove Duplicates From Sorted Lists
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head == null || head.next == null){
+            return head;
+        }
+        ListNode prev = head, ptr = head.next;
+        while(ptr != null ){
+            if(ptr.val == prev.val){
+                ptr = ptr.next;
+            }
+            else{
+                prev.next = ptr;
+                prev = ptr;
+                ptr = ptr.next;
+            }
+        }
+        prev.next = null;
+        return head;
+
     }
 }
