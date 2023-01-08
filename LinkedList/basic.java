@@ -809,66 +809,36 @@ class Solution {
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
+
 class Solution {
-    public int size(ListNode node)
-    {
+    public int getSize(ListNode node){
         int count = 0;
-        while(node != null)
-        {
+        while(node != null){
             count++;
             node = node.next;
         }
         return count;
     }
-    public  ListNode th = null;
-    public  ListNode tt = null;
-    
-    public  void addFirst(ListNode node)
-    {
-        if(th == null)
-        {
-            th = node;
-            tt = node;
+    public ListNode reverseKGroup_(ListNode head, int k, int size){
+        if(head == null || head.next == null || size < k){
+            return head;
         }
-        else
-        {
-            node.next = th;
-            th = node;
+        ListNode prev = null, curr = head, next = null;
+        int pos = k;
+        while(curr != null && pos-- > 0){
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
         }
+        if(next != null){
+            head.next = reverseKGroup_(next, k, size-k);
+        }
+        return prev;
     }
     public ListNode reverseKGroup(ListNode head, int k) {
-        if(head == null || head.next == null || k == 0)
-        return head;
-    int len = size(head);
-    ListNode oh = null;
-    ListNode ot = null;
-    ListNode curr = head;
-    while(len >= k)
-    {
-        int temp = k;
-        while(temp-- >0)
-        {
-            ListNode nex = curr.next;
-            curr.next = null;
-            addFirst(curr);
-            curr = nex;
-        }
-        if(oh == null)
-        {
-           oh = th;
-           ot = tt;
-        }else
-        {
-            ot.next = th;
-            ot = tt;
-        }
-        th = null;
-        tt = null;
-        len-=k;
-    }
-    ot.next = curr;
-        
-        return oh;
+        int size = getSize(head);
+        return reverseKGroup_(head, k, size);
     }
 }
 
