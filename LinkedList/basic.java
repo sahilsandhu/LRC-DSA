@@ -932,3 +932,96 @@ class Solution {
 
     }
 }
+
+// 92. Reverse LinkedList - 2 // Reverse in Range
+
+class Solution {
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        ListNode dummy = new ListNode(0, head);
+        ListNode ptr = dummy, prev1 = null;
+        for(int i=0; i<left; i++){
+            prev1 = ptr;
+            ptr = ptr.next;
+        } 
+        ListNode curr = ptr, next = null, prev2 = prev1;
+        for(int i=left; i<=right; i++){
+            next = curr.next;
+            curr.next = prev2;
+            prev2 = curr;
+            curr = next;
+        }
+        prev1.next = prev2;
+        ptr.next = curr;
+        return dummy.next;
+    }
+}
+
+
+// Cycle Node in LinkedList
+
+public static int findFirstNode(Node head){
+        //code here
+        if(head == null || head.next == null)
+            return head == null ? -1 : head.data;
+        Node slow = head, fast = head;
+        while(fast!=null && fast.next!=null){
+            //System.out.println(slow.data+" "+fast.data);
+            slow = slow.next;
+            fast = fast.next.next;
+            if(fast == slow){
+                break;
+            }
+        }
+        if(fast != slow){
+            return -1;
+        }
+        fast = head;
+        while(fast != slow){
+            fast = fast.next;
+            slow = slow.next;
+        }
+        return slow.data;
+    }
+
+// LeetNode 138 : Copy List with Random Pointer
+
+class Solution {
+    public Node copyRandomList(Node head) {
+        Node ptr = head;
+        while(ptr != null){
+            Node temp = ptr.next;
+            Node node = new Node(ptr.val);
+            ptr.next = node;
+            node.next = temp;
+            ptr = ptr.next.next;
+        }
+
+        ptr = head;
+        while(ptr != null){
+            if(ptr.random != null)
+                ptr.next.random = ptr.random.next;
+            else
+                ptr.next.random = null;
+            System.out.print(ptr.val+" ");
+            ptr = ptr.next.next;
+        }
+        
+        ptr = head;
+        Node newNode = new Node(-1);
+        Node copy, copyPtr = newNode;
+
+        while(ptr != null){
+            Node next = ptr.next.next;
+
+            // extract copy
+            copy = ptr.next;
+            copyPtr.next = copy;
+            copyPtr = copy;
+
+            // modifying original list links
+            ptr.next = next;
+            ptr = next;
+        }
+        return newNode.next;
+    }
+}
