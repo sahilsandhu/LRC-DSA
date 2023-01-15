@@ -1025,3 +1025,46 @@ class Solution {
         return newNode.next;
     }
 }
+
+
+// Seggregate 0 - 1 - 2
+
+class Solution
+{
+    //Function to sort a linked list of 0s, 1s and 2s.
+    static Node segregate(Node head)
+    {
+        Node zeroNode = new Node(-1);
+        Node oneNode = new Node(-1);
+        Node twoNode = new Node(-1);
+        Node zero = zeroNode, one = oneNode, two = twoNode;
+        Node ptr = head;
+        while(ptr != null){
+            if(ptr.data == 0){
+                zero.next = ptr;
+                zero = ptr;
+            }
+            else if(ptr.data == 1){
+                one.next = ptr;
+                one = ptr;
+            }
+            else{
+                two.next = ptr;
+                two = ptr;
+            }
+            ptr = ptr.next;
+        }
+        zero.next = null;
+        one.next = null;
+        two.next = null;
+        zero.next = oneNode.next;
+        if(oneNode.next == null){
+            zero.next = twoNode.next;
+        }
+        else{
+            one.next = twoNode.next;
+        }
+        return zeroNode.next;
+        // add your code here
+    }
+}
