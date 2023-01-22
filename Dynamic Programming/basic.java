@@ -1498,6 +1498,27 @@ vector<vector<int>>dp(s1.size()+1,vector<int>(s2.size()+1,-1));
 cout<<helper(s1,s2,s1.size(),s2.size(),ins,del,rep,dp);
 }
 
-//
+// Stock Span
+
+public static int[] solve(int[] arr){
+   int n = arr.length;
+   int[] lge = new int[n];
+   Stack<Integer> st = new Stack<>();
+   st.push(0);
+   lge[0] = 1;
+   for(int i=1; i<n; i++){
+     while(st.size()>0 && arr[i] > arr[st.peek()])
+     st.pop();
+     if(st.size() > 0)
+     lge[i] = i-st.peek();
+     else
+     lge[i] = i+1;
+     st.push(i);
+   }
+   return lge;
+ }
+
+
+// 
 
 
