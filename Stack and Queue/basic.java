@@ -256,3 +256,115 @@ public static void main(String[] args) throws Exception {
     return -1;
  }
 }
+
+
+public static void main(String[] args) throws Exception {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    String exp = br.readLine();
+    Stack<String> pre = new Stack<>();
+    Stack<String> post = new Stack<>();
+    Stack<Character> operator = new Stack<>();
+    for(int i=0; i<exp.length(); i++){
+        char ch = exp.charAt(i);
+        if(ch=='('){
+            operator.push(ch);
+        }
+        else if((ch>='a'&& ch<='z') || (ch>='0'&& ch<='9') || (ch>='A'&& ch<='Z')){
+            pre.push(ch+"");
+            post.push(ch+"");
+        }
+        else if(ch=='+' || ch=='-' || ch=='*' || ch=='/'){
+            while(operator.size()>0 && operator.peek()!='(' && precedence(ch) <= precedence(operator.peek())){
+                char op = operator.pop();
+                String v2 = pre.pop();
+                String v1 = pre.pop();
+                String res = op+v1+v2;
+                pre.push(res);
+                
+                String vp2 = post.pop();
+                String vp1 = post.pop();
+                String rest = vp1+vp2+op;
+                post.push(rest);
+            }
+            operator.push(ch);
+        }
+        else if(ch == ')'){
+            while(operator.size()>0 && operator.peek()!='('){
+                char op = operator.pop();
+                String v2 = pre.pop();
+                String v1 = pre.pop();
+                String res = op+v1+v2;
+                pre.push(res);
+                
+                String vp2 = post.pop();
+                String vp1 = post.pop();
+                String rest = vp1+vp2+op;
+                post.push(rest);
+            }
+            if(operator.size() > 0)
+            operator.pop();
+        }
+    }
+    while(operator.size()>0 && operator.peek()!='('){
+        char op = operator.pop();
+        String v2 = pre.pop();
+        String v1 = pre.pop();
+        String res = op+v1+v2;
+        pre.push(res);
+                
+        String vp2 = post.pop();
+        String vp1 = post.pop();
+        String rest = vp1+vp2+op;
+        post.push(rest);
+    }
+    System.out.println(post.pop());
+    System.out.println(pre.pop());
+    // code
+ }
+ public static int precedence(char ch){
+    if(ch == '+' || ch == '-')
+    return 1;
+    else 
+    return 2;
+ }
+}
+
+
+// Celebrity Problem
+
+ public static void findCelebrity(int[][] arr) {
+        // if a celebrity is there print it's index (not position), if there is not then
+        // print "none"
+        Stack<Integer> st = new Stack<>();
+        int n = arr.length;
+        for(int i=0; i<n; i++){
+            st.push(i);
+        }
+        while(st.size() > 1){
+            int a = st.pop();
+            int b = st.pop();
+            if(arr[a][b] != 1){
+                st.push(a);
+            }
+            else{
+                st.push(b);
+            }
+        }
+        int pc = st.pop();
+        int flag = 0;
+        for(int i=0; i<n; i++){
+            if(arr[pc][i] != 0 && i!=pc){
+                flag = 1;
+                System.out.println("none");
+                break;
+            }
+            if(arr[i][pc] != 1 && i!=pc){
+                flag = 1;
+                System.out.println("none");
+                break;
+            }
+        }
+        if(flag ==0){
+            System.out.println(pc);
+        }
+    }
