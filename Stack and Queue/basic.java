@@ -257,6 +257,7 @@ public static void main(String[] args) throws Exception {
  }
 }
 
+// Infix Conversion
 
 public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -368,3 +369,344 @@ public static void main(String[] args) throws Exception {
             System.out.println(pc);
         }
     }
+
+//Postfix Evaluation -> Convert into Inorder and Preorder and calculate value
+
+public static void main(String[] args) throws Exception {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    String exp = br.readLine();
+    Stack<String> pre = new Stack<>();
+    Stack<String> in = new Stack<>();
+    Stack<Integer> operand = new Stack<>();
+    
+    for(int i=0; i<exp.length(); i++){
+        char ch = exp.charAt(i);
+        if(ch=='+' || ch=='-' || ch=='*' || ch=='/'){
+            
+            int val2 = operand.pop();
+            int val1 = operand.pop();
+            int ans = evaluate(val1, val2, ch);
+                
+            String in2 = in.pop();
+            String in1 = in.pop();
+            String inAns = "("+in1+ch+in2+")";
+                
+            String pre2 = pre.pop();
+            String pre1 = pre.pop();
+            String preAns = ch+pre1+pre2+"";
+                
+            operand.push(ans);
+            in.push(inAns);
+            pre.push(preAns);
+        }
+        else{
+            operand.push(ch-'0');
+            pre.push(ch+"");
+            in.push(ch+"");
+        }
+    }
+    
+    System.out.println(operand.pop());
+    System.out.println(in.pop());
+    System.out.println(pre.pop());
+    // code
+ }
+
+ public static int evaluate(int val1, int val2, char op){
+    if(op == '+')
+        return val1+val2;
+    else if(op=='-')
+        return val1-val2;
+    else if(op=='*')
+        return val1*val2;
+    else
+        return val1/val2;
+ }
+}
+
+// Now for Prefix : the procedure remains same -> just reverse the string and follow the same steps
+
+// Merge Overlapping Intervals
+
+public class pair implements Comparable<pair>{
+        int u, v;
+        pair(int u, int v){
+            this.u = u;
+            this.v = v;
+        }
+        public int compareTo(pair other){
+            if(this.u != other.u)
+            return this.u - other.u;
+            else
+            return this.v - other.v;
+        }
+    }
+    public int[][] merge(int[][] intervals) {
+        int n = intervals.length;
+        pair[] ar = new pair[n];
+        for(int i=0; i<n; i++){
+            ar[i] = new pair(intervals[i][0], intervals[i][1]);
+        }
+        Arrays.sort(ar);
+        Stack<pair> st = new Stack<>();
+        st.push(ar[0]);
+        for(int i=1; i<n; i++){
+            pair top = ar[i];
+            pair curr = st.peek();
+            if(curr.v >= top.u){
+                st.pop();
+                pair p = new pair(0, 0);
+                p.u = Math.min(curr.u, top.u);
+                p.v = Math.max(curr.v, top.v);
+                st.push(p);
+            }
+            else{
+                st.push(top);
+            }
+        }
+        int[][] ans = new int[st.size()][2];
+        for(int i=st.size()-1; i>=0; i--){
+            ans[i][0] = st.peek().u;
+            ans[i][1] = st.peek().v;
+            st.pop();
+        }
+        return ans;
+    }
+
+    // Construct Smallest Number from DI string
+
+    class Solution {
+    public String smallestNumber(String pattern) {
+        StringBuilder sb = new StringBuilder();
+        Stack<Integer> st = new Stack<>();
+        int val = 1;
+        for(int i=0; i<pattern.length(); i++){
+            st.push(val++);
+            char ch = pattern.charAt(i);
+            if(ch == 'I'){
+                while(st.size() > 0){
+                    sb.append(st.pop()+"");
+                }
+            }
+        }
+        st.push(val++);
+        while(st.size() > 0){
+            sb.append(st.pop()+"");
+        }
+        return sb.toString();
+    }
+}
+
+// MIN STACK 
+
+public class Main {
+
+  public static class MinStack {
+    Stack<Integer> allData;
+    Stack<Integer> minData;
+
+    public MinStack() {
+      allData = new Stack<>();
+      minData = new Stack<>();
+    }
+
+
+    int size() {
+        return allData.size();
+    }
+
+    void push(int val) {
+        if(allData.size()==0 || val <= minData.peek()){
+            minData.push(val);
+        }
+        allData.push(val);
+    }
+
+    int pop() {
+        if(allData.size() == 0){
+            System.out.println("Stack underflow");
+            return -1;
+        }
+        else if(allData.peek() == minData.peek())
+            minData.pop();
+        return allData.pop();
+    }
+
+    int top() {
+      if(allData.size() == 0){
+        System.out.println("Stack underflow");
+        return -1;
+      }
+      return allData.peek();
+      
+    }
+}
+
+// MIN Stack O(1)
+
+class MinStack {
+    int min;
+    Stack<Integer> st;
+    public MinStack() {
+        st = new Stack<>();
+    }
+    
+    public void push(int val) {
+        if(st.size() == 0){
+            min = val;
+            st.push(val);
+        }
+        else{
+            if(val < min){
+                st.push(val + val - min);
+                min = val;
+            }
+            else{
+                st.push(val);
+            }
+        }
+    }
+    
+    public void pop() {
+        if(min <= st.peek())
+        st.pop();
+        else{
+            int v = st.pop();
+            min = 2*min - v;
+        }
+    }
+    
+    public int top() {
+        if(min > st.peek()){
+            return min;
+        }
+        return st.peek();
+    }
+    
+    public int getMin() {
+        return min;
+    }
+}
+// Next Greater element to Left
+class Solution{
+    public static int[] help_greater_element_Right(int[] arr, int n){
+        Stack<Integer> st = new Stack<>();
+        int[] nge = new int[n];
+        nge[0] = -1;
+        st.push(0);
+        for(int i=1; i<n; i++){
+            while(st.size()>0 && arr[i] >= arr[st.peek()])
+            st.pop();
+            if(st.size() == 0){
+                arr[i] = -1;
+            }
+            else{
+                arr[i] = st.peek();
+            }
+            st.push(i);
+        }
+        return arr;
+    }
+}
+
+// Next Smaller Element to Right
+
+class Solution {
+	public static int[] next_Smaller_element_Right(int arr[], int n) 
+	{ 
+	    Stack<Integer> st = new Stack<>();
+	    int[] nse = new int[n];
+	    nse[n-1] = -1;
+	    st.push(n-1);
+	    for(int i=n-2; i>=0; i--){
+	        while(st.size() > 0 && arr[i] <= arr[st.peek()])
+	           st.pop();
+	        if(st.size() == 0)
+	           nse[i] = -1;
+	        else
+	           nse[i] = arr[st.peek()];
+	        st.push(i);
+	    }
+	    return nse;
+	} 
+}
+
+// Next Smaller Element to Left
+
+class Solution {
+	public static int[] next_Smaller_element_Left(int arr[], int n) 
+	{ 
+	    Stack<Integer> st = new Stack<>();
+	    int[] nse = new int[n];
+	    nse[0] = -1;
+	    st.push0);
+	    for(int i=1; i<n; i++){
+	        while(st.size() > 0 && arr[i] <= arr[st.peek()])
+	           st.pop();
+	        if(st.size() == 0)
+	           nse[i] = -1;
+	        else
+	           nse[i] = arr[st.peek()];
+	        st.push(i);
+	    }
+	    return nse;
+	} 
+}
+
+// Next Greater Element - 1
+
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        int n = nums2.length;
+        Stack<Integer> st = new Stack<>();
+        int[] nge = new int[n];
+        nge[n-1] = -1;
+        st.push(n-1);
+        for(int i=n-2; i>=0; i--){
+            while(st.size() > 0 && nums2[i] >= nums2[st.peek()])
+                st.pop();
+            if(st.size() == 0){
+                nge[i] = -1;
+            }
+            else{
+                nge[i] = nums2[st.peek()];
+            }
+            st.push(i);
+        }
+        HashMap<Integer, Integer> hm = new HashMap<>();
+        for(int j=0; j<n; j++){
+            hm.put(nums2[j], nge[j]);
+        }   
+
+        int[] ans = new int[nums1.length];
+        for(int j=0; j<nums1.length; j++){
+            ans[j] = hm.get(nums1[j]);
+        }
+        return ans;
+    }
+}
+
+// Next Greater Element - 2
+
+class Solution {
+    public int[] nextGreaterElements(int[] nums) {
+        Stack<Integer> st = new Stack<>();
+        int n = nums.length;
+        int[] nge = new int[n];
+        nge[n-1] = -1;
+        st.push(n-1);
+        for(int i=2*n-1; i>=0; i--){
+            while(st.size() > 0 && nums[i%n] >= nums[st.peek()]){
+                st.pop();
+            }
+            if(st.size() == 0){
+                nge[i%n] = -1;
+            }
+            else{
+                nge[i%n] = nums[st.peek()];
+            }
+            st.push(i%n);
+        }
+        return nge;
+    }
+}
