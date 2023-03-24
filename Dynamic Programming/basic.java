@@ -104,9 +104,9 @@ public static int helper(int n,int idx,int[] ar)
 
 // Climb stairs with variable jumps Tabulation
 public static int helper(int n,int[] ar,int[] dp)
+{
+    for(int idx=n;idx>=0;idx--)
     {
-        for(int idx=n;idx>=0;idx--)
-        {
         if(idx == n){
          dp[idx] = 1;
         continue;
@@ -117,9 +117,9 @@ public static int helper(int n,int[] ar,int[] dp)
             count+=dp[idx+j];
         }
         dp[idx] = count;
-        }
-        return dp[0];
     }
+        return dp[0];
+}
 
 // 4. climb stairs with minimum moves Recurssion
 
@@ -195,17 +195,17 @@ public static int helper(int sr,int sc,int dr,int dc,int[][] ar,int[][] dp)
         {
             for(sc = dc;sc>=0;sc--)
             {
-        if(sr == dr && sc == dc){
-        dp[sr][sc] = ar[sr][sc];
-            continue;
+                if(sr == dr && sc == dc){
+                    dp[sr][sc] = ar[sr][sc];
+                    continue;
+                }
+            int count = 0;
+            int a = sr+1>dr? Integer.MAX_VALUE : dp[sr+1][sc];
+            int b = sc+1>dc? Integer.MAX_VALUE : dp[sr][sc+1];
+            count = Math.min(a,b) + ar[sr][sc]; 
+            dp[sr][sc] = count;
+            }
         }
-        int count = 0;
-        int a = sr+1>dr? Integer.MAX_VALUE : dp[sr+1][sc];
-        int b = sc+1>dc? Integer.MAX_VALUE : dp[sr][sc+1];
-        count = Math.min(a,b) + ar[sr][sc]; 
-        dp[sr][sc] = count;
-        }
-    }
     return dp[0][0];
     }
 

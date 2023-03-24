@@ -113,7 +113,7 @@ public static void main(String[] args) throws Exception {
     }
     
     Stack<Integer> st = new Stack<>();
-    // right greater element
+    // right smaller element
     int[] rge = new int[n];
     rge[n-1] = n;
     st.push(n-1);
@@ -126,7 +126,7 @@ public static void main(String[] args) throws Exception {
         rge[i] = st.peek();
         st.push(i);
     }
-    // left greater element
+    // left smaller element
     st = new Stack<>();
     int[] lge = new int[n];
     lge[0] = -1;
@@ -149,6 +149,25 @@ public static void main(String[] args) throws Exception {
     System.out.println(ans);
     // code
  }
+
+
+ // Largest Area Histogram - 2 (Time Optimized) // 1 Traversal
+public static int largestHistogram(int[] heights){
+    Stack<Integer> st = new Stack<>();
+    st.push(-1);
+    int maxArea = Integer.MIN_VALUE;
+    for(int i=0; i<heights.length; i++){
+        int val = i==heights.length ? 0 : heights[i];
+        while(st.peek()!=-1 && heights[i] >= val){
+            int rm = i;
+            int h = heights[st.pop()];
+            int lm = st.peek();
+            maxArea = Math.max(maxArea, h*(rm-lm-1));
+        }
+        st.push(i);
+    }
+}
+
 
  // Sliding Window Maximum
 
@@ -710,3 +729,5 @@ class Solution {
         return nge;
     }
 }
+
+
