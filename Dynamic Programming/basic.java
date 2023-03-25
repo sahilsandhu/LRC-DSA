@@ -211,7 +211,7 @@ public static int helper(int sr,int sc,int dr,int dc,int[][] ar,int[][] dp)
 
 //6. Special Matrix
 
-public int dirs[][] = {{1,0},{0,1}};
+     public int dirs[][] = {{1,0},{0,1}};
      public int helper(int sr,int sc,int dr,int dc,boolean[][] cells,int[][] dp)
      {
          if(sr == dr && sc == dc && cells[dr][dc] == false)
