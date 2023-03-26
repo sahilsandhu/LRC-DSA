@@ -600,7 +600,6 @@ static int[][] dirs = {{1,0},{1,-1},{1,1}};
             {
                 count = Math.max(count,maximumPath_(x,y,n,matrix,dp) + matrix[sr][sc]);
             }
-            
         }
         return dp[sr][sc] = count;
     }
@@ -618,7 +617,7 @@ static int[][] dirs = {{1,0},{1,-1},{1,1}};
         // code here
     }
 
-    // Friends PAiring Memoization
+// Friends Pairing Memoization
 
  int mod = (int)1e9 + 7;
     public long countFriendsPairings_(int n,long[] dp)
@@ -747,47 +746,17 @@ int longestCommonSubstr(String s1, String s2, int I, int J){
                    dp[idx1][idx2] = 0;
                    continue;
                 }
-           if(s1.charAt(idx1-1) == s2.charAt(idx2-1)){
-               dp[idx1][idx2] = dp[idx1-1][idx2-1]+1;
-               result = Math.max(dp[idx1][idx2],result);
-           }
-           else
-               dp[idx1][idx2] = 0;
+                if(s1.charAt(idx1-1) == s2.charAt(idx2-1)){
+                    dp[idx1][idx2] = dp[idx1-1][idx2-1]+1;
+                    result = Math.max(dp[idx1][idx2],result);
+                }
+                else
+                    dp[idx1][idx2] = 0;
             }
-           
         }
         return result;
     }
 
-// Leetcode 115 
-
-public int numDistinct_(String s,String t,int m,int n,int[][] dp)
-    {
-       if(m<n)
-           return 0;
-        if(n == 0)
-            return 1;
-        if(dp[m][n] != -1)
-            return dp[m][n];
-        int count = 0;
-        if(s.charAt(m-1) == t.charAt(n-1))
-        {
-            count += numDistinct_(s,t,m-1,n-1,dp) + numDistinct_(s,t,m-1,n,dp);
-        }
-        else
-        {
-            count += numDistinct_(s,t,m-1,n,dp);
-        }
-        return dp[m][n] = count;
-    }
-    public int numDistinct(String s, String t) {
-        int m = s.length();
-        int n = t.length();
-        int dp[][] = new int[m+1][n+1];
-        for(int[] d: dp)
-            Arrays.fill(d,-1);
-        return numDistinct_(s,t,m,n,dp);
-    }
 
 // Leetcode 72
 public int minDistance_(String s1,String s2,int m,int n,int[][]dp)
@@ -838,6 +807,37 @@ public int minDistance_(String s1,String s2,int m,int n,int[][]dp,int []cost)
         return dp[m][n] = count;
         
     }
+
+// Leetcode 115 
+
+public int numDistinct_(String s,String t,int m,int n,int[][] dp)
+    {
+       if(m<n)
+           return 0;
+        if(n == 0)
+            return 1;
+        if(dp[m][n] != -1)
+            return dp[m][n];
+        int count = 0;
+        if(s.charAt(m-1) == t.charAt(n-1))
+        {
+            count += numDistinct_(s,t,m-1,n-1,dp) + numDistinct_(s,t,m-1,n,dp);
+        }
+        else
+        {
+            count += numDistinct_(s,t,m-1,n,dp);
+        }
+        return dp[m][n] = count;
+    }
+    public int numDistinct(String s, String t) {
+        int m = s.length();
+        int n = t.length();
+        int dp[][] = new int[m+1][n+1];
+        for(int[] d: dp)
+            Arrays.fill(d,-1);
+        return numDistinct_(s,t,m,n,dp);
+    }
+
 
 // Leetcode 44
 int isMatch_(String s1,String s2,int l1,int l2,int[][]dp)
