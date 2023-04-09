@@ -722,7 +722,7 @@ int helper(String s, int i,int j,int[][] dp)
         int count = 0;
         if(s.charAt(i) == s.charAt(j))
         {
-            count=helper(s,i+1,j-1,dp)+2;;
+            count=helper(s,i+1,j-1,dp)+2;
             
         }
         else
