@@ -931,41 +931,6 @@ int isMatch_(String s1,String s2,int l1,int l2,int[][]dp)
         return isMatch_(s,str,l1,l2,dp)==1;
     }
 
-// Leetcode 1458 / MAX dot product of 2 subsequences
-
-class Solution {
-    public int Maximum(int...ar){
-        int max = ar[0];
-        for(int val : ar){
-            max = Math.max(val,max);
-        }
-        return max;
-    }
-    public int maxDotProduct_(int[] nums1, int[] nums2, int i, int j, int[][] dp){
-        if(i == 0 || j == 0){
-            return dp[i][j] = -(int)1e8;
-        }
-        if(dp[i][j] != -(int)1e9){
-            return dp[i][j];
-        }
-        int curr = nums1[i-1]*nums2[j-1];
-        int inc = maxDotProduct_(nums1,nums2,i-1,j-1, dp)+curr;
-        int left = maxDotProduct_(nums1,nums2,i-1,j,dp);
-        int right = maxDotProduct_(nums1, nums2,i, j-1, dp);
-        int ans = Maximum(curr,inc,left,right);
-        return dp[i][j] = ans;
-    }
-    public int maxDotProduct(int[] nums1, int[] nums2) {
-        int n = nums1.length;
-        int m = nums2.length;
-        int[][] dp = new int[n+1][m+1];
-        for(int[] ar : dp){
-            Arrays.fill(ar, -(int)1e9);
-        }
-        return maxDotProduct_(nums1,nums2,n,m,dp);
-    }
-}
-
 
 // Leetcode 1035 // uncrossed 
 
@@ -1001,6 +966,43 @@ public int lCS_(int[] s1,int I,int[] s2,int J,int[][]dp)
         int[][] dp = new int[n+1][m+1];
         return lCS_(nums1,n,nums2,m,dp);
     }
+
+
+// Leetcode 1458 / MAX dot product of 2 subsequences
+
+class Solution {
+    public int Maximum(int...ar){
+        int max = ar[0];
+        for(int val : ar){
+            max = Math.max(val,max);
+        }
+        return max;
+    }
+    public int maxDotProduct_(int[] nums1, int[] nums2, int i, int j, int[][] dp){
+        if(i == 0 || j == 0){
+            return dp[i][j] = -(int)1e8;
+        }
+        if(dp[i][j] != -(int)1e9){
+            return dp[i][j];
+        }
+        int curr = nums1[i-1]*nums2[j-1];
+        int inc = maxDotProduct_(nums1,nums2,i-1,j-1, dp)+curr;
+        int left = maxDotProduct_(nums1,nums2,i-1,j,dp);
+        int right = maxDotProduct_(nums1, nums2,i, j-1, dp);
+        int ans = Maximum(curr,inc,left,right);
+        return dp[i][j] = ans;
+    }
+    public int maxDotProduct(int[] nums1, int[] nums2) {
+        int n = nums1.length;
+        int m = nums2.length;
+        int[][] dp = new int[n+1][m+1];
+        for(int[] ar : dp){
+            Arrays.fill(ar, -(int)1e9);
+        }
+        return maxDotProduct_(nums1,nums2,n,m,dp);
+    }
+}
+
 
 //  Leetcode 05
 
