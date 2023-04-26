@@ -1075,7 +1075,47 @@ public String longestPalindrome(String s) {
         return "";
     }
 
+// leetcode 131
+// Palindrome Partitioning
+
+class Solution {
+    public List<List<String>> ans;
+    public boolean isPalindrome(String s, int si, int ei){
+        while(si <= ei){
+            if(s.charAt(si) != s.charAt(ei))
+                return false;
+            si++;
+            ei--;
+        }
+        return true;
+    }
+    public void partition_(String s, List<String> al, int idx){
+        if(idx==s.length()){
+            System.out.println(al);
+            ans.add(new ArrayList<>(al));
+            //System.out.println(ans);
+            return;
+        }
+        for(int i=idx; i<s.length();i++){
+            if(isPalindrome(s, idx, i)){
+                //System.out.println(s.substring(idx,i+1)+" "+idx+" "+ (i+1));
+                al.add(s.substring(idx,i+1));
+                partition_(s, al, i+1);
+                al.remove(al.size()-1);
+            }
+        }
+    }
+    public List<List<String>> partition(String s) {
+        ans = new ArrayList<>();
+        if(s==null || s.length()==0) return new ArrayList<>();
+        partition_(s, new ArrayList<>(), 0);
+        return ans;
+    }
+}
+
+
 // leetcode 132
+// Palindrome Partitioning 2 
 
     public int minCut_(String s,boolean[][] dp,int si,int ei,int[] pdp)
     {
@@ -1141,7 +1181,88 @@ int fun(string &s) {
 
 // count subsequence of aibjckdlem // NEW 
 
-// Leetcode 140 -> WordBreak
+// Palindrome Partitioning 3 ::::: Leetcode - 1278
+
+class Solution {
+    // this method will store the minimum cuts for each palindromic substring
+    public int[][] getMin(String s){
+        int n = s.length();
+        int[][] dp = new int[n][n];
+        for(int gap = 1; gap<n; gap++){
+            for(int i=0,j=gap; j<n; i++,j++){
+                // If the gap is 1 and both characters are same the min cut is 0
+                if(gap==1)
+                    dp[i][j] = s.charAt(i)==s.charAt(j) ? 0 : 1;
+                else{
+                // If both characters are same the min cut is the previous cut because it leads to palindromic substring else add 1 to previous cut
+                    dp[i][j] = s.charAt(i)==s.charAt(j) ? dp[i+1][j-1] : dp[i+1][j-1]+1;
+                }
+            }
+        }
+        return dp;
+    }
+    public int palindromePartition_(String s, int k, int si, int[][] getMin, int[][] dp){
+
+        if(s.length()-si <= k){
+            return dp[si][k] = (s.length()-si == k) ? 0 : (int)1e9;
+        } 
+
+        if(k==1)
+            dp[si][k] = getMin[si][s.length()-1];
+
+        if(dp[si][k] != -1)
+            return dp[si][k];
+        
+        int ans = Integer.MAX_VALUE;
+        //Here we check what is the minimum cuts of palindrome substrings for all the substrings of this string
+        for(int i=si; i<s.length(); i++){
+            int minChanges = getMin[si][i];
+            int minRec = palindromePartition_(s, k-1, i+1, getMin, dp);
+            if(minRec != (int)1e9)
+            ans = Math.min(ans, minRec + minChanges);
+        }
+
+        return dp[si][k] = ans;
+    }
+    public int palindromePartition(String s, int k) {
+        int[][] getMin = getMin(s);
+        int n = s.length();
+        int[][] dp = new int[n+1][k+1];
+        for(int[] d : dp) Arrays.fill(d, -1);
+        return palindromePartition_(s, k, 0, getMin, dp);
+    }
+}
+
+// Leetcode - 139 ::::: Word Break
+
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        HashSet<String> set = new HashSet<>();
+        int len = 0;
+        for(String ss: wordDict)
+        {
+            set.add(ss);
+            len = Math.max(ss.length(),len);
+        }
+        boolean[] dp = new boolean[s.length()+1];
+        dp[0] = true;
+        for(int i=0;i<s.length();i++)
+        {
+            if(!dp[i]) 
+                continue;
+            for(int l = 1;l<=len && i+l<=s.length();l++)
+            {
+               
+                    String str = s.substring(i,i+l);
+                    if(set.contains(str))
+                        dp[i+l] = true;
+            }
+        }
+        return dp[s.length()];
+    }
+}
+
+// Leetcode 140 -> WordBreak 2 
 
 class Solution {
     public void wordBreak_(String s,boolean[] dp,int si,int ei,ArrayList<String>ans,String str,
@@ -1194,11 +1315,74 @@ class Solution {
     }
 }
 
+// Regulare Expression Matching 
+// Leetcode ::::  10
+
+class Solution {
+    public int isMatch_(String s,String p,int n,int m,int[][] dp)
+    {
+        if(m == 0 && n==0)
+        {
+            return dp[n][m] = 1;
+        }
+        if(m == 0)
+            return dp[n][m] = 0;
+        if(dp[n][m] != -1)
+            return dp[n][m];
+        char ch1 = n>0 ? s.charAt(n-1) : '$';
+        char ch2 = m>0 ? p.charAt(m-1) : '-';
+        if(ch1 != '$' && (ch1 == ch2 || ch2=='.'))
+            return dp[n][m] = isMatch_(s,p,n-1,m-1,dp);
+        else if(ch2 == '*')
+        {
+            boolean res = false;
+            if(n>0 && m>1 && (p.charAt(m-2) == '.' || p.charAt(m-2) == ch1))
+                res = res || isMatch_(s,p,n-1,m,dp)==1;
+            res = res || isMatch_(s,p,n,m-2,dp)==1;
+            return dp[n][m] = res ? 1 : 0;
+        }
+        else {
+            return dp[n][m] = 0;
+        }
+        
+    }
+    public String removeStars(String str)
+    {
+         if (str.length() == 0)
+            return str;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(str.charAt(0));
+
+        int i = 1;
+        while (i < str.length()) {
+            while (i < str.length() && sb.charAt(sb.length() - 1) == '*' && str.charAt(i) == '*')
+                i++;
+
+            if (i < str.length())
+                sb.append(str.charAt(i));
+            i++;
+        }
+
+        return sb.toString();
+    }
+    public boolean isMatch(String s, String p) {
+         p = removeStars(p);
+        int n = s.length(), m = p.length();
+
+        int[][] dp = new int[n + 1][m + 1];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        return isMatch_(s, p, n, m, dp) == 1; 
+    }
+}
+
 // LPSS - BackEngg (Longest Palindromic Subsequence)
 
 public static String lpss_backEngg(String s, int si, int ei, int[][] dp){
-if(si > ei){
-    return si == ei ? .charAt(si) + "" : "" ;
+if(si >= ei){
+    return si == ei ? s.charAt(si) + "" : "" ;
 }
  if(s.charAt(si) == s.charAt(ei)){
      return s.charAt(si) + lpss_backEngg(s,) + s.charAt(ei);
