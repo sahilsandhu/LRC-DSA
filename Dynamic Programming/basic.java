@@ -1385,7 +1385,7 @@ if(si >= ei){
     return si == ei ? s.charAt(si) + "" : "" ;
 }
  if(s.charAt(si) == s.charAt(ei)){
-     return s.charAt(si) + lpss_backEngg(s,) + s.charAt(ei);
+     return s.charAt(si) + lpss_backEngg(s,si+1, ei-1) + s.charAt(ei);
  }
  else if(dp[si+1][ei] > dp[si][ei-1]){
      return lpss_backEngg(s, si+1, ei, dp);
