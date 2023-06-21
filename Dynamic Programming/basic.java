@@ -1395,6 +1395,93 @@ if(si >= ei){
  }
 }
 
+
+// House Robber 2 
+// LEETCODE :::: 213
+
+class Solution {
+    public int rob_(int[] nums,int si,int ei,int[] dp)
+    {
+        if(si > ei)
+            return 0;
+        if(dp[si]!= -1)
+            return dp[si];
+        int ans = -(int)1e9;
+        int inc = nums[si] + rob_(nums,si+2,ei,dp);
+        int exc = rob_(nums,si+1,ei,dp);
+        ans = Math.max(inc,exc);
+
+       return  dp[si] = ans;
+    }
+    public int rob(int[] nums) {
+        int n =nums.length;
+        if(n==0 || n==1)
+            return n==1 ? nums[0] : 0;
+        
+        int[] dp1 = new int[n];
+        Arrays.fill(dp1,-1);
+        int[] dp2 = new int[n];
+        Arrays.fill(dp2,-1);
+        return Math.max(rob_(nums,0,n-2,dp1),rob_(nums,1,n-1,dp2));
+    }
+}
+
+// House Robber
+// Leetcode ::::  198 
+
+class Solution {
+    public int rob_(int[] nums,int si,int ei,int[] dp)
+    {
+        if(si > ei)
+            return 0;
+        if(dp[si]!= -1)
+            return dp[si];
+        int ans = -(int)1e9;
+        int inc = nums[si] + rob_(nums,si+2,ei,dp);
+        int exc = rob_(nums,si+1,ei,dp);
+        ans = Math.max(inc,exc);
+
+       return  dp[si] = ans;
+    }
+    public int rob(int[] nums) {
+       int n =nums.length;
+        if(n==0 || n==1)
+            return n==1 ? nums[0] : 0;
+        
+        int[] dp1 = new int[n];
+        Arrays.fill(dp1,-1);
+        
+        return rob_(nums,0,n-1,dp1); 
+    }
+}
+
+
+// Pizza with 3n Slices 
+
+class Solution {
+    public int maxSizeSlices_(int[] nums,int si,int ei,int slices,int[][] dp)
+    {
+        if(si > ei || slices == 0)
+            return 0;
+        if(dp[ei][slices] != -1)
+            return dp[ei][slices];
+        int inc = nums[ei] + maxSizeSlices_(nums,si,ei-2,slices-1,dp);
+        int exc = maxSizeSlices_(nums,si,ei-1,slices,dp);
+        return dp[ei][slices] = Math.max(inc,exc);
+    }
+    public int maxSizeSlices(int[] slices) {
+        int n = slices.length;
+        int[][] dp1 = new int[n+1][n/3+1];
+        for(int[] d : dp1)
+            Arrays.fill(d,-1);
+        int[][] dp2 = new int[n+1][n/3+1];
+        for(int[] d : dp2)
+            Arrays.fill(d,-1);
+        return Math.max(maxSizeSlices_(slices,0,n-2,n/3,dp1),maxSizeSlices_(slices,1,n-1,n/3,dp2));
+    }
+}
+
+
 // LIS  -> Longest Increasing Subsequence
 
 class Solution {
