@@ -1444,7 +1444,7 @@ class Solution {
        return  dp[si] = ans;
     }
     public int rob(int[] nums) {
-       int n =nums.length;
+       int n = nums.length;
         if(n==0 || n==1)
             return n==1 ? nums[0] : 0;
         
@@ -1514,6 +1514,7 @@ class Solution {
 
 // LIS Tabulation
 
+// Here we move in opposite direction
 int helper(int[] ar,int idx,int[] dp)
     {
         int n = dp.length,maxlen = 0;
@@ -1531,12 +1532,6 @@ int helper(int[] ar,int idx,int[] dp)
     }
     public int lengthOfLIS(int[] nums) {
         int[] dp = new int[nums.length];
-        // int ans = 0;
-        // for(int i=0;i<dp.length;i++)
-        // {
-        //    int rans = 
-        //   ans = Math.max(rans,ans);
-        // }
         return helper(nums,0,dp);
     }
 
@@ -1551,7 +1546,7 @@ class Solution {
            dp[i] = 1;
            for(int j = i-1;j>=0;j--)
            {
-               if(ar[i]<ar[j])
+               if(ar[i] < ar[j])
                    dp[i] = Math.max(dp[i],dp[j]+1);
            }
            maxlen = Math.max(dp[i],maxlen);
@@ -1560,12 +1555,6 @@ class Solution {
     }
     public int lengthOfLIS(int[] nums) {
         int[] dp = new int[nums.length];
-        // int ans = 0;
-        // for(int i=0;i<dp.length;i++)
-        // {
-        //    int rans = 
-        //   ans = Math.max(rans,ans);
-        // }
         return helper(nums,0,dp);
     }
 }
@@ -1591,7 +1580,7 @@ class Solution {
         int ans = 0;
         int[] dp = new int[nums.length+1];
         Arrays.fill(dp,-1);
-        for(int i=0;i<nums.length;i++)
+        for(int i=0; i<nums.length; i++)
         {
             ans = Math.max(ans,lengthOfLIS_(nums,dp,i));
         }
@@ -1651,51 +1640,40 @@ class Solution
 }
 
 // Maximum Sum Bitonic Subsequence
-class Solution
-{
-    public void lis(int[] nums,int[] dp)
-    {
-        int n = nums.length;
-        for(int i=0;i<n;i++)
-        {
-            dp[i] = 1;
-            for(int j = i-1;j>=0;j--)
-            {
-                if(nums[i] > nums[j])
-                dp[i] = Math.max(dp[i],dp[j]+1);
+class Compute {
+    
+    public static int[] LIS_LR(int[] ar, int n){
+        int[] dp = new int[n];
+        for(int i=0; i<n; i++){
+            dp[i] = ar[i];
+            for(int j=i-1; j>=0; j--){
+                if(ar[j] < ar[i]){
+                    dp[i] = Math.max(dp[i], ar[i] + dp[j]);
+                }
             }
         }
+        return dp;
     }
-    public void lis_RL(int[] nums,int[] dp)
-    {
-         int n = nums.length;
-         for(int i= nums.length-1;i>=0;i--)
-         {
-             dp[i] = 1;
-             for(int j = i+1;j<nums.length;j++)
-             {
-                 if(nums[j] < nums[i])
-                 dp[i] = Math.max(dp[i],dp[j] + 1);
-             }
-         }
-        
+    
+    public static int[] LIS_RL(int[] ar, int n){
+        int[] dp = new int[n];
+        for(int i=n-1; i>=0; i--){
+            dp[i] = ar[i];
+            for(int j=i+1; j<n; j++){
+                if(ar[j] < ar[i]){
+                    dp[i] = Math.max(dp[i], ar[i] + dp[j]);
+                }
+            }
+        }
+        return dp;
     }
-    public int LongestBitonicSequence(int[] nums)
+    public static int maxSumBS(int arr[], int n)
     {
-        // Code here
-        int n = nums.length;
-        int[] dp1 = new int[n];
-        int[] dp2 = new int[n];
-        Arrays.fill(dp1,-1);
-        Arrays.fill(dp2,-1);
-        
-        lis(nums,dp1);
-        lis_RL(nums,dp2);
+        int[] left = LIS_LR(arr, n);
+        int[] right = LIS_RL(arr, n);
         int ans = 0;
-        for(int i=0;i<n;i++)
-        {
-            //System.out.println(dp1[i]+" "+dp2[i]);
-            ans = Math.max(ans,dp1[i]+dp2[i]-1);
+        for(int i=0; i<n; i++){
+            ans = Math.max(ans, left[i]+right[i]-arr[i]);
         }
         return ans;
     }
@@ -1705,65 +1683,138 @@ class Solution
 
 class Solution
 {
-	public int maxSumIS(int nums[], int n)  
+    public int LIS_LR(int[] ar, int n){
+        int[] dp = new int[n];
+        int ans = 0;
+        for(int i=0; i<n; i++){
+            dp[i] = ar[i];
+            for(int j=i-1; j>=0; j--){
+                if(ar[j] < ar[i]){
+                    dp[i] = Math.max(dp[i], dp[j] + ar[i]);
+                }
+            }
+            ans = Math.max(ans, dp[i]);
+        }
+        return ans;
+    }
+	public int maxSumIS(int arr[], int n)  
 	{  
-	    //code here.
-	    int max = 0;
-	    int[] dp = new int[n];
-	    for(int i=0;i<n;i++)
-	    {
-	        dp[i] = nums[i];
-	        for(int j = i-1;j>=0;j--)
-	        {
-	            if(nums[j] < nums[i])
-	            {
-	                dp[i] = Math.max(dp[i], dp[j] + nums[i]);
-	            }
-	        }
-	        max = Math.max(max,dp[i]);
-	    }
-	    return max;
+	    return LIS_LR(arr, n);
 	}  
 }
 
 // Longest Reverse Bitonic Subsequence :: ??????????
 
+// Same as above
 
-// Edit Distance
+// Number of LIS
 
 class Solution {
-public:
-    int helper(string s1, string s2, int I,int J,vector<vector<int>> &dp)
+    int helper(int[] nums,int n,int[] dp,int[] count)
     {
-        for(int i=0;i<=I;i++)
-        {
-            for(int j=0;j<=J;j++){
-               if(i == 0 || j == 0){
-               dp[i][j] = i==0?j:i;
-               continue;
-               }
-               int insert = dp[i][j-1];
-               int deletee = dp[i-1][j];
-               int replace = dp[i-1][j-1];
-               if(s1[i-1] == s2[j-1])
-               {
-               dp[i][j] = replace;
-               }
-               else
-               {
-               dp[i][j] = min(min(insert,deletee),replace) + 1;
-               } 
+        int max = 0;
+        int mcount = 0;
+        for(int i=0;i<n;i++){
+            dp[i] = 1;
+            count[i] = 1;
+            for(int j = i-1;j>=0;j--)
+            {
+                if(nums[i] > nums[j]){
+                    if(dp[i] < dp[j]+1){
+                        dp[i] = dp[j]+1;
+                        count[i] = count[j];
+                    }
+                    else if(dp[i] == dp[j]+1){
+                        count[i]+=count[j];
+                    }
+                }
+            }
+            if(dp[i] > max){
+                max = dp[i];
+                mcount=count[i];
+            }
+            else if(dp[i] == max){
+                mcount+=count[i];
             }
         }
-        
-        return dp[I][J];
+        return mcount;
     }
-    int minDistance(string word1, string word2) {
-        vector<vector<int>> dp(word1.size()+1,vector<int>(word2.size()+1,-1)); 
-        return helper(word1,word2,word1.size(),word2.size(),dp);
-        
+    public int findNumberOfLIS(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n];
+        int[] count = new int[n];
+         
+        return helper(nums,n,dp,count);
     }
-};
+}
+
+// Building Bridges
+// Sort the array on the basis of north and perform LIS on the basis of South
+
+public class Bridges{
+    int n; 
+    int s;
+    Bridges(int n, int s){
+        this.n = n;
+        this.s = s;
+    }
+
+    public int compareTo(Bridges b){
+        if(this.n != b.n){
+            return this.s - b.s;
+        }
+        else{
+            return this.s - b.s;
+        }
+    }
+}
+
+int maxBridges(Bridges[] ar, int n)
+{       
+    Arrays.sort(ar);
+    int[] dp = new int[n];
+    int ans = 0;
+    for(int i=0; i<n; i++){
+        dp[i] = 1;
+        for(int j=i-1; j>=0; j--){
+            if(ar[i].s >= ar[j].s){
+                dp[i] = Math.max(dp[i], dp[j]+1);
+            }
+        }
+        ans = Math.max(ans, dp[i]);
+    }
+    return ans;
+}
+
+
+// Russian Dolls
+
+class Solution {
+     public int helper(int[][] ar,int[] dp,int n)
+    {
+        int ans = 0;
+        for(int i=0;i<n;i++)
+        {
+            dp[i] = 1;
+            for(int j = i-1;j>=0;j--)
+            {
+                if(ar[j][0] < ar[i][0] && ar[j][1] < ar[i][1]){
+                    dp[i] = Math.max(dp[j]+1,dp[i]);
+                }
+            }
+            ans = Math.max(ans,dp[i]);
+        }
+        return ans;
+    }
+    public int maxEnvelopes(int[][] envelopes) {
+        Arrays.sort(envelopes,(a,b)->{
+            return a[1] - b[1];
+        });
+        int n = envelopes.length;
+        int[] dp = new int[n];
+        return helper(envelopes,dp,n);
+    }
+}
 
 // Follow up question : 1. we are provided some cost of insertion, deletion
 // replacement we need to minimize the cost
