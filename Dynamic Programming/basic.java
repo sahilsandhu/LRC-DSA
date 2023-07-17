@@ -1816,6 +1816,1050 @@ class Solution {
     }
 }
 
+
+// Permutations
+
+class Solution {
+public:
+    vector<vector<int>>finalans;
+    void helper(vector<int>&nums,vector<int> &vis,vector<int>&ans)
+    {
+        if(ans.size() == nums.size()) 
+        {
+            finalans.push_back(ans);
+            return;
+        }
+        for(int i=0;i<nums.size();i++)
+        {
+            if(vis[i] == 0)
+            {
+                vis[i] = 1;
+                ans.push_back(nums[i]);
+                helper(nums,vis,ans);
+                ans.pop_back();
+                vis[i] = 0 ;
+            }
+        }
+    }
+    vector<vector<int>> permute(vector<int>& nums) {
+        finalans.clear();
+        vector<int> ans;
+        vector<int> vis(nums.size(),0);
+        helper(nums,vis,ans);
+        return finalans;
+    }
+};
+
+// Combination
+
+class Solution {
+    List<List<Integer>> finalAns = new ArrayList<>();
+    public void combine_(int[] nums, List<Integer> ans, int k, int pos, int n){
+        if(pos == n || k == 0){
+            if(k == 0)
+                finalAns.add(new ArrayList<>(ans));
+            return ;
+        }
+        for(int i=pos; i<n; i++){
+            ans.add(nums[i]);
+            combine_(nums, ans, k-1, i+1, n);
+            ans.remove(ans.size()-1);
+        }
+    }
+    public List<List<Integer>> combine(int n, int k) {
+        int[] nums = new int[n];
+        for(int i=0; i<n; i++){
+            nums[i] = i+1;
+        }
+        List<Integer> ans = new ArrayList<>();
+        combine_(nums, ans, k, 0, n);
+        return finalAns;
+    }
+}
+
+
+// Subset Sum Problem
+
+import java.io.*;
+import java.util.*;
+
+class GFG
+{
+    public static void main(String args[])throws IOException
+    {
+        BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
+        int t = Integer.parseInt(read.readLine());
+        while(t-- > 0)
+        {
+            int N = Integer.parseInt(read.readLine());
+            String input_line[] = read.readLine().trim().split("\\s+");
+            int arr[]= new int[N];
+            for(int i = 0; i < N; i++)
+                arr[i] = Integer.parseInt(input_line[i]);
+            int sum = Integer.parseInt(read.readLine());
+
+            Solution ob = new Solution();
+            if(ob.isSubsetSum(N, arr, sum))
+            System.out.println(1);
+            else
+            System.out.println(0);
+
+            
+        }
+    }
+}
+
+// } Driver Code Ends
+
+
+//User function Template for Java
+
+class Solution{
+
+    static int isSubsetSum_(int n, int[] arr, int sum, int[][] dp){
+        if(n < 0)
+            return dp[n][sum] = 0;
+        if(n == 0 || sum == 0){
+            if(sum == 0)
+                return dp[n][sum] = 1;
+            return dp[n][sum] = 0;
+        } 
+        if(dp[n][sum] != -1){
+            return dp[n][sum];
+        }
+        boolean ans = false;
+        if(arr[n-1] > sum){
+            ans = ans || (isSubsetSum_(n-1, arr, sum, dp)==1);
+            return dp[n][sum] = ans == true ? 1 : 0;
+        }else{
+            ans = ((isSubsetSum_(n-1, arr, sum, dp) == 1) 
+            || (isSubsetSum_(n-1, arr, sum - arr[n-1], dp)) == 1);
+            return dp[n][sum] = ans == true ? 1 : 0;
+        }
+    }
+
+    static Boolean isSubsetSum(int N, int arr[], int sum){
+        int[][] dp = new int[N+1][sum+1];
+        for(int[] d : dp){
+            Arrays.fill(d, -1);
+        }
+        return isSubsetSum_(N, arr, sum, dp)==1;
+    }
+}
+
+// Target Sum ::: Leetcode 494
+
+class Solution {
+    public int findTargetSumWays_(int[] nums, int idx, int sum, int target, HashMap<String, Integer> hm){
+        if(idx == nums.length){
+            if(sum == target){
+                return 1;
+            }
+            return 0;
+        }
+        String key = getString(idx, sum);
+        if(hm.containsKey(key)){
+            return hm.get(key);
+        }
+
+        int count = 0;
+        count += findTargetSumWays_(nums, idx+1, sum+nums[idx], target, hm);
+        count += findTargetSumWays_(nums, idx+1, sum-nums[idx], target, hm);
+        hm.put(key, count);
+        return count;
+    }
+    public String getString(int idx, int sum){
+        return idx+" "+sum;
+    }
+    public int findTargetSumWays(int[] nums, int target) {
+        HashMap<String, Integer> hm = new HashMap<>();
+        return findTargetSumWays_(nums, 0, 0, target, hm);
+    }
+}
+
+
+// Combination Sum 4 :::: Leetcode 377
+class Solution {
+    public int combinationSum4_(int[] nums, int sum, int target, int[] dp){
+        if(sum > target){
+            return 0;
+        }
+        if(sum == target){
+            return dp[sum] = 1;
+        }
+        if(dp[sum] != -1){
+            return dp[sum];
+        }
+        int count = 0;
+        for(int i=0; i<nums.length; i++){
+            count += combinationSum4_(nums, sum + nums[i], target, dp);
+        }
+        return dp[sum] = count;
+    }
+    public int combinationSum4(int[] nums, int target) {
+        int[] dp = new int[target+1];
+        Arrays.fill(dp, -1);
+        return combinationSum4_(nums, 0, target, dp);
+    }
+}
+
+
+// coin change 
+
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        int[][] dp = new int[n+1][amount + 1];
+        for(int i=0; i<=n; i++){
+            for(int j=0; j<=amount; j++){
+                if(i == 0 || j == 0){
+                    dp[i][j] = (j==0) ? 0 : Integer.MAX_VALUE-1;
+                }
+            }
+        }
+
+        for(int i=1; i<=n; i++){
+            for(int j=1; j<=amount; j++){
+                if(coins[i-1] > j){
+                    dp[i][j] = dp[i-1][j];
+                }
+                else{
+                    dp[i][j] = Math.min(dp[i-1][j], dp[i][j-coins[i-1]]+1);
+                }
+            }
+        }
+        return dp[n][amount] == Integer.MAX_VALUE-1 ? -1 : dp[n][amount];
+    }
+}
+
+// Minimum Cost For Tickets :::: Leetcode -> 983
+
+class Solution {
+    public int mincostTickets(int idx, int[] days, int day, int[] costs, 
+    int[] dp){
+        if(idx >= days.length){
+            return 0;
+        }
+        if(dp[idx] != -1){
+            return dp[idx];
+        }
+        int p1 = mincostTickets(idx + 1, days, day+1, costs, dp) + costs[0];
+        
+        for(idx = day; idx < days.length; idx++)
+            if(days[idx] >= days[day] + 7) break;
+        int p2 = mincostTickets(idx, days, idx, costs, dp) + costs[1];
+
+        for(idx = day; idx < days.length; idx++)
+            if(days[idx] >= days[day] + 30) break;
+        int p3 = mincostTickets(idx, days, idx, costs, dp) + costs[2];
+        return dp[day] = Math.min(p1, Math.min(p2, p3));
+    }
+
+    public int mincostTickets(int[] days, int[] costs) {
+        int[] dp = new int[days.length];
+        Arrays.fill(dp, -1);
+        return mincostTickets(0, days, 0, costs, dp);
+    }
+}
+
+
+// 0-1 Knapsack
+
+class Solution 
+{ 
+    //Function to return max value that can be put in knapsack of capacity W.
+    static int knapSack(int W, int wt[], int val[], int n) 
+    { 
+        int[][] dp = new int[n+1][W+1];
+       for(int i=0; i<=n; i++){
+           for(int j=0; j<=W; j++){
+               if(i==0 || j==0){
+                   dp[i][j] = 0;
+                   continue;
+               }
+                          
+               if(wt[i-1] > j){
+                   dp[i][j] = dp[i-1][j];
+               }
+               else{
+                   dp[i][j] = Math.max(dp[i-1][j], val[i-1]+dp[i-1][j-wt[i-1]]);
+               }
+           }
+       }
+       return dp[n][W];
+    } 
+}
+
+// Unbounded Knapsack
+
+class Solution{
+    static int knapSack(int n, int W, int val[], int wt[])
+    {
+        int[][] dp = new int[n+1][W+1];
+        for(int i=0; i<=n; i++){
+           for(int j=0; j<=W; j++){
+               if(i==0 || j==0){
+                   dp[i][j] = 0;
+                   continue;
+               }
+                          
+               if(wt[i-1] > j){
+                   dp[i][j] = dp[i-1][j];
+               }
+               else{
+                   dp[i][j] = Math.max(dp[i-1][j], val[i-1]+dp[i][j-wt[i-1]]);
+               }
+           }
+       }
+       return dp[n][W];
+    }
+}
+
+// 416. Partition Equal Subset Sum || Target Sum
+
+class Solution {
+    public int canPartition(int[] nums, int idx, int totalSum , 
+    int[][] dp){
+        if(totalSum == 0)
+            return dp[idx][totalSum] = 1;
+
+        if (idx == 0 && totalSum != 0)
+            return 0;
+
+        if(dp[idx][totalSum] != -1){
+            return dp[idx][totalSum];
+        }
+        if(nums[idx-1] > totalSum){
+            return canPartition(nums, idx-1, totalSum, dp);
+        }
+        boolean c1 = canPartition(nums, idx-1, totalSum, dp) == 1;
+        boolean c2 = canPartition(nums, idx-1, totalSum-nums[idx-1], dp) == 1;
+        return dp[idx][totalSum] = ((c1 || c2) == true) ? 1 : 0; 
+    }
+
+    public boolean canPartition(int[] nums) {
+        Arrays.sort(nums);
+        int totalSum = 0;
+        for(int val : nums){
+            totalSum += val;
+        }
+        if(totalSum % 2 != 0){
+            return false;
+        }
+        totalSum = totalSum/2;
+        int[][] dp = new int[nums.length+1][totalSum+1];
+        for(int[] d: dp){
+            Arrays.fill(d, -1);
+        }
+        canPartition(nums, nums.length, totalSum, dp);
+        return dp[nums.length][totalSum]==1;
+    }
+}
+
+
+// 688. Knight Probability in Chessboard
+
+class Solution {
+    int xMove[] = { 2, 1, -1, -2, -2, -1, 1, 2 };
+    int yMove[] = { 1, 2, 2, 1, -1, -2, -2, -1 };
+    public double knightProbability_(int n, int k, int row, int col,double[][][] dp) {
+        if(k == 0)
+            return dp[k][row][col] = 1.0;
+        if(dp[k][row][col] != 0.0)
+            return dp[k][row][col];
+        
+        double count = 0.0;
+        for(int i=0;i<8;i++)
+        {
+            int x = row + xMove[i];
+            int y = col + yMove[i];
+            
+            if(x>=0 && y>=0 && x<n && y<n)
+            {
+                count += knightProbability_(n,k-1,x,y,dp);
+            }    
+        }
+        return dp[k][row][col] =  count / 8.0;
+    }
+    public double knightProbability(int n, int k, int row, int column) {
+        double[][][] dp = new double[k+1][n+1][n+1];
+        return knightProbability_(n,k,row,column,dp);
+    }
+}
+
+
+//  576. Out of Boundary Paths
+
+class Solution {
+    int[][] dirs = {{-1,0},{0,1},{1,0},{0,-1}};
+    public long findPaths_(int r, int c, int dr, int dc, int mv, long[][][] dp){
+        if(r<0 || c<0 || r>=dr || c>=dc){
+            return 1;
+        }
+        if(mv == 0){
+            return 0;
+        }
+        if(dp[r][c][mv] != -1){
+            return dp[r][c][mv];
+        }
+        int mod = (int)1e9 + 7;
+        long count = 0;
+        for(int i=0; i<4; i++){
+            int x = r + dirs[i][0];
+            int y = c + dirs[i][1];
+            count += findPaths_(x, y, dr, dc, mv-1, dp)%mod;
+        }
+        return dp[r][c][mv] = (count%mod);
+    }
+    public int findPaths(int m, int n, int maxMove, int startRow, int startColumn) {
+        int mod = (int)1e9 + 7;
+        long[][][] dp = new long[m+1][n+1][maxMove+1];
+        for(long[] []row: dp){
+            for(long [] col : row){
+                Arrays.fill(col, -1);
+            }
+        }
+        int ans = (int)findPaths_(startRow, startColumn, m, n, maxMove, dp)%mod;
+        return ans;
+    }
+}
+
+// Matrix Chain Multiplication
+
+class Solution{
+    static int matrixMultiplication(int si, int ei, int[] arr, int[][] dp){
+        if(ei-si == 1){
+            return dp[si][ei] = 0;
+        }
+        if(dp[si][ei] != 0){
+            return dp[si][ei];
+        }
+        int minRes = (int)1e9;
+        for(int cut = si+1; cut<ei; cut++){
+            int leftRes = matrixMultiplication(si, cut, arr, dp);
+            int rightRes = matrixMultiplication(cut, ei, arr, dp);
+            minRes = Math.min(minRes, leftRes + arr[si]*arr[cut]*arr[ei] + rightRes);
+        }
+        return dp[si][ei] = minRes;
+    }
+    static int matrixMultiplication(int N, int arr[])
+    {
+        int[][] dp = new int[N+1][N+1];
+        return matrixMultiplication(0, N-1, arr, dp);
+    }
+}
+
+// Tabulation of MCM
+
+static int matrixMultiplication(int N, int arr[])
+    {
+        int[][] dp = new int[N+1][N+1];
+        return matrixMultiplication(0, N-1, arr, dp);
+    }
+    
+    static int matrixMultiplication(int SI, int EI, int[] arr, int[][] dp){
+        int n = arr.length;
+        for(int gap=0; gap<n; gap++){
+            for(int si = 0, ei=gap; ei<n; si++,ei++){
+                if(ei-si == 1){
+                    dp[si][ei] = 0;
+                    continue;
+                }
+                int minRes = (int)1e9;
+                for(int cut = si+1; cut<ei; cut++){
+                    int leftRes = dp[si][cut];
+                    int rightRes = dp[cut][ei];
+                    minRes = Math.min(minRes, leftRes + arr[si]*arr[cut]*arr[ei] + rightRes);
+                }
+                dp[si][ei] = minRes;
+            }
+        }
+        return dp[SI][EI];
+    }
+
+
+// Brackets in Matrix Chain Multiplication 
+
+class Solution{
+    static String matrixChainOrder(int p[], int N){
+        int[][] dp = new int[N+1][N+1];
+        String[][] sdp = new String[N+1][N+1];
+        return matrixMultiplication(0, N-1, p, dp, sdp);
+    }
+
+
+static String matrixMultiplication(int SI, int EI, int[] arr, int[][] dp, String[][] sdp){
+        int n = arr.length;
+        for(int gap=0; gap<n; gap++){
+            for(int si = 0, ei=gap; ei<n; si++,ei++){
+                if(ei-si == 1){
+                    dp[si][ei] = 0;
+                    sdp[si][ei] = (char)(si + 'A') + "";
+                    continue;
+                }
+                int minRes = (int)1e9;
+                String minStr = "";
+                for(int cut = si+1; cut<ei; cut++){
+                    int leftRes = dp[si][cut];
+                    int rightRes = dp[cut][ei];
+                    if(minRes > (leftRes + arr[si]*arr[cut]*arr[ei] + rightRes)){
+                        minRes = leftRes + arr[si]*arr[cut]*arr[ei] + rightRes;
+                        minStr = "(" + sdp[si][cut] + sdp[cut][ei] + ")";
+                    }
+                }
+                dp[si][ei] = minRes;
+                sdp[si][ei] = minStr;
+            }
+        }
+        return sdp[SI][EI];
+    }
+}
+
+// Follow UP Question :::: Now not only +,* we also have - as an operator now we will have different cases to perform, 
+// as (-) * (-) = (+) so we need to find different permutations
+
+
+// Boolean Parantization ::: 
+class Solution{
+    public static class pairBoolean{
+        long trueCount;
+        long falseCount;
+        
+        pairBoolean(long trueCount, long falseCount){
+            this.trueCount = trueCount;
+            this.falseCount = falseCount;
+        }
+        
+        pairBoolean(){
+        }
+    }
+    
+    static void evaluate(pairBoolean leftR, pairBoolean rightR, char op, pairBoolean res){
+        long mod = 1003;
+        long totalTF = ((leftR.trueCount + leftR.falseCount) * 
+        (rightR.trueCount + rightR.falseCount)) % mod;
+        
+        long trueRes = 0, falseRes = 0;
+        if(op == '|'){
+            falseRes = (leftR.falseCount * rightR.falseCount) % mod;
+            trueRes = (totalTF - falseRes + mod)%mod;
+        }
+        else if(op == '&'){
+            trueRes = (leftR.trueCount * rightR.trueCount) % mod;
+            falseRes = (totalTF - trueRes + mod)%mod;
+        }
+        else if(op == '^'){
+            trueRes = (leftR.falseCount * rightR.trueCount)%mod + 
+            (leftR.trueCount * rightR.falseCount)%mod;
+            falseRes = (totalTF - trueRes + mod)%mod;
+        }
+        
+        res.falseCount = (res.falseCount + falseRes)%mod;
+        res.trueCount = (res.trueCount  + trueRes)%mod;
+    }
+    
+    static pairBoolean countWays_(String s, int si, int ei, pairBoolean[][] dp){
+        if(si == ei){
+            char ch = s.charAt(si);
+            int tr = (ch == 'T') ? 1 : 0;
+            int fr = (ch == 'F') ? 1 : 0;
+            return new pairBoolean(tr, fr);
+        }
+        if(dp[si][ei] != null){
+            return dp[si][ei];
+        }
+        
+        pairBoolean res = new pairBoolean();
+        for(int cut = si+1; cut<ei; cut+=2){
+            char op = s.charAt(cut);
+            pairBoolean left = countWays_(s, si, cut-1, dp);
+            pairBoolean right = countWays_(s, cut+1, ei, dp);
+            evaluate(left, right, op, res);
+        }
+        return dp[si][ei] = res; 
+    }
+    static int countWays(int N, String S){
+        pairBoolean[][] dp = new pairBoolean[N][N];
+        pairBoolean res = (countWays_(S, 0, N-1, dp));
+        return (int)res.trueCount;
+    }
+}
+
+// Optimal BST
+static int optimalBST(int[] val, int[] freq, int si, int ei, int[][] dp){
+    if(dp[si][ei] != 0){
+        return dp[si][ei];
+    }
+    int minCost = (int)1e8;
+    int sum = 0;
+    for(int cut = si; cut<=ei; cut++){
+        int left = si == 0 ? 0 : optimalBST(val, freq, si, cut - 1, dp);
+        int right = ei == 0 ? 0 : optimalBST(val, freq, cut+1, ei, dp);
+        sum += freq[cut];
+        minCost = Math.min(minCost, left + right);
+    }
+    return dp[si][ei] = minCost + sum;
+}
+
+
+// Minimum Score Triangulation :::: LEETCODE : 1039
+class Solution {
+    public int minScoreTriangulation_(int[] values, int si, int ei, int[][] dp){
+        if(ei-si< 2){
+            return dp[si][ei] = 0;
+        }
+        if(dp[si][ei] != 0){
+            return dp[si][ei];
+        }
+        int ans = Integer.MAX_VALUE;
+        for(int cut = si+1; cut<ei; cut++){
+            int left = minScoreTriangulation_(values, si, cut, dp);
+            int right = minScoreTriangulation_(values, cut, ei, dp);
+            int tempAns = left + right + (values[cut]*values[si]*values[ei]);
+            ans = Math.min(ans, tempAns);
+        }
+        return dp[si][ei] = ans;
+    }
+    public int minScoreTriangulation(int[] values) {
+        int n = values.length;
+        int[][] dp = new int[n][n];
+        return minScoreTriangulation_(values, 0, n-1, dp);
+    }
+}
+
+//  Minimum and Maximum values of an expression with * and +
+
+public class pairMM{
+    int min;
+    int max;
+    pairMM(){
+
+    }
+    pairMM(int val){
+        this.min = min;
+    }
+}
+
+public static pairMM evaluate(pairMM left, pairMM right, char op){
+    pairMM tempObj = new pairMM();
+    if(ch == '+'){
+        tempObj.min = left.min + right.min;
+        tempObj.max = left.max + right.max;
+    }
+    else if(ch == '*'){
+        tempObj.min = left.min * right.min;
+        tempObj.max = left.max * right.max;
+    }
+    return tempObj;
+}
+
+public static pairMM minMax(String str, int si, int ei, pairMM[][] dp){
+    if(si == ei){
+        pairMM obj = new pairMM(str.charAt(si) - '0');
+        return dp[si][ei] = obj;
+    }
+    if(dp[si][ei] != null){
+        return dp[si][ei];
+    }
+    pairMM res = new pairMM();
+    for(int cut = si+1; cut<ei; cut+=2){
+        pairMM leftRes = minMax(str, si, cut-1, dp);
+        pairMM rightRes = minMax(str, cut+1, ei, dp);
+        pairMM tempRes = evaluate(leftRes, rightRes, str.charAt(cut));
+        res.min = Math.min(leftRes.min, rightRes.min);
+        res.max = Math.max(leftRes.max, rightRes.max);
+    }
+    return dp[si][ei] = res;
+}
+
+// Generate All BST :::: LEETCODE : 95
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public void generate(List<TreeNode> left,List<TreeNode> right, int root,List<TreeNode> ans)
+    {
+        if(left.size() != 0 && right.size() != 0)
+        {
+            for(TreeNode l : left)
+            {
+                for(TreeNode r : right)
+                {
+                    TreeNode rn = new TreeNode(root);
+                    rn.left = l;
+                    rn.right = r;
+                    ans.add(rn);
+                }
+            }
+        }
+        else if(left.size() != 0)
+        {
+            for(TreeNode node : left)
+            {
+                TreeNode rn = new TreeNode(root);
+                rn.left = node;
+                ans.add(rn);
+            }
+        }
+        else if(right.size() != 0)
+        {
+            for(TreeNode node : right)
+            {
+                TreeNode ln = new TreeNode(root);
+                ln.right = node;
+                ans.add(ln);
+            }
+        }
+        else
+        {
+            TreeNode node = new TreeNode(root);
+            ans.add(node);
+        }
+    }
+    public List<TreeNode> generateTrees(int si,int ei) {
+        List<TreeNode> ans = new ArrayList<>();
+        if(si == ei)
+        {
+            TreeNode n = new TreeNode(si);
+            ans.add(n);
+            return ans;
+        }
+        for(int cut = si;cut<=ei;cut++)
+        {
+            List<TreeNode> left = generateTrees(si,cut-1);
+            List<TreeNode> right = generateTrees(cut+1,ei);
+            generate(left,right,cut,ans);
+        }
+        return ans;
+    }
+    public List<TreeNode> generateTrees(int n) {
+        List<TreeNode> ans = new ArrayList<>();
+       return generateTrees(1,n);
+    }
+}
+
+
+// Largest square submatrix with all 1 :::: Leetcode -> 221
+
+class Solution {
+    public int maximalSquare(char[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int[][] dp = new int[n][m];
+        
+        int ans = 0;
+        for(int i=n-1; i>=0; i--)
+        {
+            for(int j=m-1; j>=0; j--)
+            {
+                if(matrix[i][j] == '0')
+                    dp[i][j] = 0;
+                
+                else if(matrix[i][j] == '1'){
+                    if((i==n-1) || (j==m-1))
+                        dp[i][j] = 1;
+                    else{    
+                        dp[i][j] = Math.min(Math.min(dp[i][j+1],dp[i+1][j+1]),dp[i+1][j]) + 1;
+                    }
+                }
+                ans = Math.max(ans,dp[i][j]);
+            }
+        }
+    return ans*ans;
+    }
+}
+
+// print all paths with minimum jump
+public static class pair{
+    int idx;
+    String psf;
+    int jmp;
+    
+    pair(){
+    }
+
+    pair(int idx, String psf, int jmp){
+        this.idx = idx;
+        this.psf = psf;
+        this.jmp = jmp;
+    }
+}
+
+public static int[] minJumps(int[] val){
+    int n = val.length;
+    int[] dp = new int[n+1];
+    Arrays.fill(dp, Integer.MAX_VALUE);
+    dp[n-1] = 0;
+    for(int i=n-2; i>=0; i--){
+        int steps = val[i];
+        int min = Integer.MAX_VALUE;
+        for(int j=1; j<=steps && i+j < n; j++){
+            if(dp[i+j] != Integer.MAX_VALUE && dp[i+j] < min){
+                min = dp[i+j];
+            }
+        }
+        if(dp[i] != 0)
+        dp[i] = min + 1;
+    }
+    return dp;
+}
+
+public static String minJumpsPath(int[] val){
+    int[] minJmp = minJumps(val);
+    Queue<pair> q = new LinkedList<>();
+    q.add(new pair(0, "", dp[0]));
+    while(q.size() > 0){
+        pair tmp = q.remove();
+        if(tmp.jmp == 0){
+            System.out.println(tmp.psf);
+            continue;
+        }
+        for(int step = 1; step <= val[tmp.idx]; step++){
+            if(tmp.idx + step < val.length && tmp.jmp-1 == dp[tmp.idx + step]){
+                q.add(new pair(tmp.idx + step, psf + "->" + (tmp.idx + step), tmp.jmp-1));
+            }
+        }
+    }
+}
+
+//  print all paths with minimum cost
+
+public static class pair{
+    int i, j;
+    String path;
+    pair(){
+    }
+
+    pair(int i, int j, String psf){
+        this.i = i;
+        this.j = j;
+        this.psf = psf;
+    }
+}
+
+public static void printAllMinPaths(int[][] ar){
+    int n = ar.length, m = ar[0].length;
+    int[][] dp = new int[n][m];
+    for(int i=n-1; i>=0; i--){
+        for(int j=m-1; j>=0; j--){
+            if(i == n-1 && j == m-1){
+                dp[i][j] = ar[i][j];
+            }else if(i == m-1){
+                dp[i][j] = dp[i][j+1] + ar[i][j];
+            }else if(j == n-1){
+                dp[i][j] = dp[i+1][j] + ar[i][j];
+            }else{
+                dp[i][j] = Math.max(dp[i+1][j], dp[i][j+1]) + ar[i][j];
+            }
+        }
+    }
+
+    Queue<pair> q = new ArrayDeque<>();
+    q.add(new pair(0, 0, ""));
+    while(q.size() > 0){
+        pair rp = q.remove();
+        if(rp.i == n-1 && rp.j == m-1){
+            System.out.println(rm.psf);
+        }else if(rp.i == n-1){
+            q.add(new pair(rp.i, rp.j+1, rp.psf+"H"));
+        }else if(rp.j == m-1){
+            q.add(new par(rp.i+1, rp.j, rp.psf+"V"));
+        }else{
+            if(dp[rp.i][rp.j+1] < dp[rp.i+1][rp.j]){
+                q.add(new pair(rp.i+1, rp.j, rp.psf + "H"));
+            }else if(dp[rp.i+1][rp.j] < dp[rp.i][rp.j+1]){
+                q.add(new pair(rp.i, rp.j+1, rp.psf + "V"));
+            }else{
+                q.add(new pair(rp.i+1, rp.j, rp.psf + "H"));
+                q.add(new pair(rp.i, rp.j+1, rp.psf + "V"));
+            }
+        }
+    }
+}
+
+// Print All paths with Maximum Gold
+
+// :: right-up (d1), 1 cell right (d2) or 1 cell right-down(d3)
+public static void printAllPathMaximumGold(int[][] ar){
+    int n = ar.length, m = ar[0].length;
+    int[][] dp = new int[n][m];
+    for(int j = arr[0].length - 1; j >= 0; j--){
+        for(int i = 0; i < arr.length; i++){
+            if(j == arr[0].length - 1){
+                dp[i][j] = arr[i][j];
+            } else if(i == 0){
+                dp[i][j] = arr[i][j] + Math.max(dp[i][j + 1], dp[i + 1][j + 1]);
+            } else if(i == arr.length - 1){
+                dp[i][j] = arr[i][j] + Math.max(dp[i][j + 1], dp[i - 1][j + 1]);
+            } else {
+                dp[i][j] = arr[i][j] + Math.max(dp[i][j + 1], Math.max(dp[i - 1][j + 1], dp[i + 1][j + 1]));
+            }
+        }
+    }
+
+    int max = Integer.MIN_VALUE;
+    for(int i = 0; i < dp.length; i++){
+        if(dp[i][0] > max){
+            max = dp[i][0];
+        }
+    }
+    System.out.println(max);
+
+    ArrayDeque<Pair> que = new ArrayDeque<>();
+      
+    for(int i = 0; i < dp.length; i++){
+        if(dp[i][0] == max){
+            que.add(new Pair(i + " ", i, 0));
+        }
+    }
+      
+    while(que.size() > 0){
+        Pair rem = que.removeFirst();
+          
+        if(rem.j == arr[0].length - 1){
+            System.out.println(rem.psf);
+        } else if(rem.i == 0){
+            int g = Math.max(dp[rem.i][rem.j + 1], dp[rem.i + 1][rem.j + 1]);
+              
+              
+            if(g == dp[rem.i][rem.j + 1]){
+                que.add(new Pair(rem.psf + "d2 ", rem.i, rem.j + 1));
+            }
+              
+            if(g == dp[rem.i + 1][rem.j + 1]){
+                que.add(new Pair(rem.psf + "d3 ", rem.i + 1, rem.j + 1));
+            }
+        } else if(rem.i == arr.length - 1){
+            int g = Math.max(dp[rem.i][rem.j + 1], dp[rem.i - 1][rem.j + 1]);
+              
+            if(g == dp[rem.i - 1][rem.j + 1]){
+                que.add(new Pair(rem.psf + "d1 ", rem.i - 1, rem.j + 1));
+            }
+              
+            if(g == dp[rem.i][rem.j + 1]){
+                que.add(new Pair(rem.psf + "d2 ", rem.i, rem.j + 1));
+            }
+          } else {
+            int g = Math.max(dp[rem.i][rem.j + 1], Math.max(dp[rem.i - 1][rem.j + 1], dp[rem.i + 1][rem.j + 1]));
+              
+            if(g == dp[rem.i - 1][rem.j + 1]){
+                que.add(new Pair(rem.psf + "d1 ", rem.i - 1, rem.j + 1));
+            }
+              
+            if(g == dp[rem.i][rem.j + 1]){
+                que.add(new Pair(rem.psf + "d2 ", rem.i, rem.j + 1));
+            }
+              
+            if(g == dp[rem.i + 1][rem.j + 1]){
+                que.add(new Pair(rem.psf + "d3 ", rem.i + 1, rem.j + 1));
+            }
+        }
+    }
+}
+
+
+/// Print All Paths With Target Sum Subset 
+
+public static void printAllPathWithTargetSum(int[] arr, int tar){
+    boolean[][] dp = new boolean[arr.length + 1][tar + 1];
+    for (int i = 0; i < dp.length; i++) {
+        for (int j = 0; j < dp[0].length; j++) {
+            if (i == 0 && j == 0) {
+                dp[i][j] = true;
+            } else if (i == 0) {
+                dp[i][j] = false;
+            } else if (j == 0) {
+                dp[i][j] = true;
+            } else {
+                if(dp[i - 1][j] == true){
+                    dp[i][j] = true;
+                } else {
+                    int val = arr[i - 1];
+                    if (j >= val && dp[i - 1][j - val] == true) {
+                        dp[i][j] = true;
+                    }
+                }
+            }
+        }
+    }
+
+    System.out.println(dp[dp.length - 1][tar]);
+    Queue<Pair> q = new ArrayDeque<>();
+    q.add(new Pair(n,tar,""));
+      
+
+    while (q.size() > 0) {
+		Pair rp = q.remove();
+		if (rp.i == 0 || rp.j == 0) {
+			System.out.println(rp.psf);
+		} else {
+			boolean exc = dp[rp.i - 1][rp.j];
+			boolean inc = rp.j - arr[rp.i - 1] >= 0 ? dp[rp.i - 1][rp.j - arr[rp.i - 1]] : false;
+				
+			if (inc == true) {
+				q.add(new Pair(rp.i - 1, rp.j - arr[rp.i - 1], (rp.i - 1) + " " + rp.psf));
+			}
+			if (exc == true) {
+				q.add(new Pair(rp.i - 1, rp.j, rp.psf));
+			}
+		}
+	}
+
+}
+
+// Print aLL paths in 0-1 Knappsack
+
+public void printAllKnapsackPath(int[] values, int[] wt, int cap, int n){
+    int[][] dp = new int[n + 1][cap + 1];
+    for (int i = 1; i < dp.length; i++) {
+        for(int j = 1; j < dp[0].length; j++){
+            int val = values[i - 1];
+            int wt = wts[i - 1];
+
+            if(j >= wt){
+                dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - wt] + val);
+            } else {
+                dp[i][j] = dp[i - 1][j];
+            }
+        }
+    }
+
+    System.out.println(dp[n][cap]);
+    Queue<Pair> q = new ArrayDeque<>();
+    q.add(new Pair(n,cap,""));
+      
+
+    while (q.size() > 0) {
+		Pair rp = q.remove();
+		if (rp.i == 0 || rp.j == 0) {
+			System.out.println(rp.psf);
+		} else {
+			int exc = dp[rp.i - 1][rp.j];
+			int inc = rp.j - wts[rp.i - 1] >= 0 ? (dp[rp.i - 1][rp.j - wts[rp.i - 1]] + values[rp.i - 1]) : Integer.MIN_VALUE;
+				
+			if (dp[rp.i][rp.j] == inc) {
+				q.add(new Pair(rp.i - 1, rp.j - wts[rp.i - 1], (rp.i - 1) + " " + rp.psf));
+			}
+			if (dp[rp.i][rp.j] == exc) {
+				q.add(new Pair(rp.i - 1, rp.j, rp.psf));
+			}
+		}
+	}
+}
+
 // Follow up question : 1. we are provided some cost of insertion, deletion
 // replacement we need to minimize the cost
 
@@ -1851,27 +2895,5 @@ vector<vector<int>>dp(s1.size()+1,vector<int>(s2.size()+1,-1));
 cout<<helper(s1,s2,s1.size(),s2.size(),ins,del,rep,dp);
 }
 
-// Stock Span
-
-public static int[] solve(int[] arr){
-   int n = arr.length;
-   int[] lge = new int[n];
-   Stack<Integer> st = new Stack<>();
-   st.push(0);
-   lge[0] = 1;
-   for(int i=1; i<n; i++){
-     while(st.size()>0 && arr[i] > arr[st.peek()])
-     st.pop();
-     if(st.size() > 0)
-     lge[i] = i-st.peek();
-     else
-     lge[i] = i+1;
-     st.push(i);
-   }
-   return lge;
- }
-
-
-// 
 
 
