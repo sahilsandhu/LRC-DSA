@@ -163,4 +163,61 @@ public static int equilibriumPoint(long arr[], int n) {
         return -1;
     }
 
-    // 
+    // Maximum Sum Increasing Subsequence
+
+    class Solution
+{
+    public int maxSumLIS(int[] arr ,int si, int[] dp, int n){
+        int ans = 0;
+        for(int i=0; i<n; i++){
+            dp[i] = arr[i];
+            for(int j=i-1; j>=0; j--){
+                if(arr[j] < arr[i]){
+                    dp[i] = Math.max(dp[i], dp[j] + arr[i]);
+                }
+            }
+            ans = Math.max(ans, dp[i]);
+        }
+        return ans;
+    }
+	public int maxSumIS(int arr[], int n)  
+	{  
+	    int[] dp = new int[n];
+	    return maxSumLIS(arr, 0, dp, n);
+	}  
+}
+
+// Convert Array to Zig - Zag Fashion
+
+
+// Approach - 1
+public void zigZag(int a[], int n){
+        Arrays.sort(a);
+        for(int i=2; i<n; i+=2){
+            int temp = a[i-1];
+            a[i-1] = a[i];
+            a[i] = temp; 
+        }
+    }
+
+//  Approach - 2
+public void zigZag(int a[], int n){
+        boolean flag = true;
+        for(int i=1; i<n; i++){
+            if(flag == true){
+                if(a[i-1] > a[i]){
+                  int temp = a[i];
+                  a[i] = a[i-1];
+                  a[i-1] = temp;
+                }
+            }
+            else{
+                if(a[i-1] < a[i]){
+                  int temp = a[i];
+                  a[i] = a[i-1];
+                  a[i-1] = temp;
+                }
+            }
+            flag = !flag;
+        }
+    }
