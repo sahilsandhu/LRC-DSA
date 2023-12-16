@@ -730,4 +730,120 @@ class Solution {
     }
 }
 
+// Validate Stack Sequence
 
+class Solution {
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+        Stack<Integer> st = new Stack<Integer>();
+        int i = 1, j=0, n = pushed.length;
+        st.push(pushed[0]);
+        while(i < n){
+            if(st.size() > 0 && st.peek() == popped[j]){
+                st.pop();
+                j++;
+            }else{
+                st.push(pushed[i]);
+                i++;
+            }
+        }
+        while(j<n && st.size() > 0 && st.peek() == popped[j]){
+            st.pop();
+            j++;
+        }
+        if(j == n && st.size() == 0){
+            return true;
+        }
+        return false;
+    }
+}
+
+
+// Minimum Add to Make Parentheses Valid
+
+class Solution {
+    public int minAddToMakeValid(String s) {
+        Stack<Character> st = new Stack<>();
+        int n = s.length();
+        int closingP = 0;
+        for(int i=0; i<n; i++){
+            char ch = s.charAt(i);
+            if(ch == '('){
+                System.out.println("(");
+                st.push(ch);
+            }else if(ch == ')'){
+                if(st.size() > 0 && st.peek() == '('){
+                    System.out.println(") : Countering the closing P");
+                    st.pop();
+                }else{
+                    System.out.println("( : Increasing the closing P");
+                    closingP++;
+                }
+            }
+        }
+        return st.size() + closingP;
+    }
+}
+
+//  Remove Outermost Parentheses
+
+class Solution {
+    public void prepareAns(StringBuffer sb, String s, int i, int j){
+        String ss = s.substring(j+1, i+1);
+        sb.append(ss.substring(1, ss.length()-1));
+    }
+    public String removeOuterParentheses(String s) {
+        StringBuffer sb = new StringBuffer();
+        int counter = 0;
+        int j = -1, n = s.length();
+        for(int i=0; i<n; i++){
+            char ch = s.charAt(i);
+            if(ch == '('){
+                counter++;
+            }else if(ch == ')'){
+                counter--;
+            }
+            if(counter == 0){
+                prepareAns(sb, s, i, j);
+                j = i;
+            }
+        }
+        return sb.toString();
+    }
+}
+
+//  Score of Paranthesis
+
+class Solution {
+    public int scoreOfParentheses(String s) {
+        Stack<Integer> st = new Stack<>();
+        int ans = 0, n = s.length();
+        for(int i=0; i<n; i++){
+            char ch = s.charAt(i);
+            if(ch == '('){
+                st.push(-1);
+            }else if(ch == ')'){
+                if(st.size() > 0 && st.peek() == -1){
+                    st.pop();
+                    st.push(1);
+                }else{
+                    int tempAns = 0;
+                    while(st.size() > 0 && st.peek() != -1){
+                        tempAns += st.pop();
+                    }
+                    st.pop();
+                    tempAns *= 2;
+                    st.push(tempAns);
+                }
+            }
+        }
+        
+        ans = 0;
+        while(st.size() > 0){
+            ans += st.pop();
+        }
+        return ans;
+    }
+}
+
+
+// 

@@ -2896,4 +2896,52 @@ cout<<helper(s1,s2,s1.size(),s2.size(),ins,del,rep,dp);
 }
 
 
+// Leetcode :: 1092 -> Shortest Common Supersequence
+
+class Solution {
+    public String shortestCommonSupersequence(String str1, String str2) {
+        int n = str1.length(), m = str2.length();
+        int[][] dp = new int[n+1][m+1];
+        int i,j;
+        for(i=0; i<=n; i++){
+            for(j=0; j<=m; j++){
+                if(i==0 || j==0){
+                    dp[i][j] = 0;
+                }
+                else if(str1.charAt(i-1) == str2.charAt(j-1)){
+                    dp[i][j] = dp[i-1][j-1] + 1;
+                }else{
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]) ;
+                }
+            }
+        }
+        i=n; j=m;
+        StringBuilder sb = new StringBuilder();
+        //char[] lcs = new char[index + 1];
+        while(i>0 && j>0){
+            if(str1.charAt(i-1) == str2.charAt(j-1)){
+                sb.append(str1.charAt(i-1));
+                i--; j--;
+            }else if(dp[i-1][j] > dp[i][j-1]){
+                i--;
+            }else{
+                j--;
+            }
+        }
+        sb.reverse();
+        i=0; j=0;
+        System.out.println(sb +" "+ dp[n][m]);
+        StringBuilder ans = new StringBuilder();
+        for(int k=0; k<sb.length(); k++){
+            char ch = sb.charAt(k);
+            while(i<n && str1.charAt(i) != ch) ans.append(str1.charAt(i++));
+            while(j<m && str2.charAt(j) != ch) ans.append(str2.charAt(j++));
+            ans.append(ch);
+            i++; j++;
+        }
+        return ans.toString() + str1.substring(i) + str2.substring(j);
+    }
+}
+
+
 

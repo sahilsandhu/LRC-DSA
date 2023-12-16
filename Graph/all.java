@@ -252,7 +252,7 @@ boolean dfs_(ArrayList<Integer>[] graph, int src, int[] vis, int count){
 
 // is graph Cyclic ===========================
 
-public boolean dfs_(ArrayList<ArrayList<Integer>> graph, int src, int[] vis){
+public boolean bfs_(ArrayList<ArrayList<Integer>> graph, int src, int[] vis){
         Queue<Integer> q = new ArrayDeque<>();
         q.add(src);
         while(q.size() > 0){
@@ -275,7 +275,7 @@ public boolean dfs_(ArrayList<ArrayList<Integer>> graph, int src, int[] vis){
         for(int i=0;i<V;i++)
         {
             if(vis[i] == 0){      
-                boolean ans = dfs_(adj,i, vis);
+                boolean ans = bfs_(adj,i, vis);
                 if(ans){
                    return true;
                 }
@@ -396,7 +396,7 @@ class Solution {
 public:
     bool dfs(vector<vector<int>> &graph,vector<int> &vis,int src)
     {
-      vis[src] = 1;
+        vis[src] = 1;
         for(int nbr : graph[src])
         {
             if(vis[nbr] == 0)
@@ -420,7 +420,7 @@ public:
             if(vis[i] == 0)
             {
                 bool as = dfs(graph,vis,i);
-                if(!as) 
+                if(as == false) 
                     ans.push_back(i);
                 
             }
@@ -469,12 +469,12 @@ class Solution {
             for(int[] dir : dirs){
                 int x = i + dir[0];
                 int y = j + dir[1];
-                if(x>=0 && y>=0 && x<n && y<m && matrix[x][y] > matrix[i][j])                 {
+                if(x>=0 && y>=0 && x<n && y<m && matrix[x][y] > matrix[i][j]){
                     degree[x][y]--;
                     if(degree[x][y] == 0)
                        q.add(x*m+y);
+                    }
                 }
-            }
             }
             ans++;
         }
@@ -581,46 +581,58 @@ class Solution {
 
 //  Kosa Raju ===============================
 
-class Solution {
-public:
-    vector<vector<int>> dirs = {{1,0},{0,1},{-1,0},{0,-1}};
-    void dfs(vector<vector<char>> & board, int i, int j)
+class Solution
+{
+    //Function to find number of strongly connected components in the graph.
+    public void dfs(ArrayList<ArrayList<Integer>> adj, int[] vis, int src, Stack<Integer> st){
+        vis[src] = 1;
+        for(int nbr : adj.get(src)){
+            if(vis[nbr] == 0){
+                dfs(adj, vis, nbr, st);
+            }
+        }
+        st.push(src);
+    }
+    public void dfs_(ArrayList<ArrayList<Integer>> graph, int[] vis, int src){
+        vis[src] = 1;
+        for(int nbr : graph.get(src)){
+            if(vis[nbr] == 0){
+                dfs_(graph, vis, nbr);
+            }
+        }
+    }
+    public int kosaraju(int V, ArrayList<ArrayList<Integer>> adj)
     {
-        board[i][j] = '#';
-        for(auto dir : dirs)
-        {
-            int x = i + dir[0];
-            int y = j + dir[1];
-            if(x>=0 && y>=0 && x<board.size() && y<board[0].size() && board[x][y] == 'O')
-                dfs(board,x,y);
-        }
-    }
-    void solve(vector<vector<char>>& board) {
-        
-        int m = board.size();
-        int n = board[0].size();
-        for(int i=0;i<m;i++)
-        {
-            for(int j=0;j<n;j++)
-            {
-                if((i == 0 || j == 0 || i == m-1 || j == n-1) && board[i][j] == 'O')
-                {
-                    dfs(board,i,j);
-                }
+        //code here
+        Stack<Integer> st = new Stack<>();
+        int[] vis = new int[V];
+        for(int i=0; i<V; i++){
+            if(vis[i]==0){
+                dfs(adj, vis, i, st);
             }
         }
-        for(int i=0;i<m;i++)
-        {
-            for(int j=0;j<n;j++)
-            {
-                if(board[i][j] == 'O')
-                    board[i][j] = 'X';
-                else if(board[i][j] == '#')
-                    board[i][j] = 'O';
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<ArrayList<Integer>>();
+        for(int i=0; i<V; i++){
+            graph.add(new ArrayList<Integer>());
+        }
+        for(int src=0; src<V; src++){
+            for(int nbr : adj.get(src)){
+                graph.get(nbr).add(src);
             }
         }
+        int ans = 0;
+        Arrays.fill(vis, 0);
+        while(st.size() > 0){
+            int src = st.pop();
+            if(vis[src] == 0){
+                ans++;
+                dfs_(graph, vis, src);
+            }
+        }
+        return ans;
     }
-};
+}
+
 
 /// Surrounded Regions ===========================
 
@@ -949,7 +961,8 @@ public class Solution {
           {
               if(grid[i][j] == 1){
                   count++;
-              bfs(new pair(i,j),grid,reach,dist);}
+                  bfs(new pair(i,j),grid,reach,dist);
+              }
           }
       }
 

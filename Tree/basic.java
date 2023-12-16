@@ -85,7 +85,7 @@ class Solution {
     }
 }
 
-// Iterative Inorder Traversal
+// Iterative Preorder Inorder Postorder Traversal
 
 /**
  * Definition for a binary tree node.
@@ -102,121 +102,58 @@ class Solution {
  *     }
  * }
  */
-class pair{
-    TreeNode node;
-    boolean ld;
-    boolean sd;
-    boolean rd;
-    pair(TreeNode node,boolean ld,boolean sd,boolean rd)
-    {
-        this.node = node;
-        this.ld = ld;
-        this.sd = sd;
-        this.rd = rd;
+
+
+//     1
+//    / \
+//   2   3
+//  / \ / \
+// 4  5 6  7
+ 
+    public class pair{
+        TreeNode node;
+        int status;
+        pair(TreeNode node, int status){
+            this.node = node;
+            this.status = status;
+        }
     }
-}
-class Solution {
-    public List<Integer> inorderTraversal(TreeNode root) {
-        List<Integer> ans = new ArrayList<>();
-        if(root == null)
-            return ans;
+    public List<Integer> iterativeTraversal(TreeNode root) {
+        List<Integer> preorder = new ArrayList<>();
+        List<Integer> inorder = new ArrayList<>();
+        List<Integer> postorder = new ArrayList<>();
+        if(root == null){
+            return inorder;
+        }
         Stack<pair> st = new Stack<>();
-        st.push(new pair(root,false,false,false));
-        while(st.size() > 0)
-        {
+        st.push(new pair(root, 1));
+        while(st.size() > 0){
             pair rp = st.peek();
-            if(rp.ld == false)
-            {
-                if(rp.node.left!=null)
-                    st.push(new pair(rp.node.left,false,false,false));
-                rp.ld = true;
-            }
-            else if(rp.sd == false)
-            {
-                ans.add(rp.node.val);
-                rp.sd = true;
-            }
-            else if(rp.rd == false)
-            {
-               if(rp.node.right!=null)
-                    st.push(new pair(rp.node.right,false,false,false));
-                rp.rd = true; 
-            }
-            else
-            {
+            if(rp.status == 1){ // pre, st++, left
+                preorder.add(rp.node.val);
+                rp.status += 1;
+                if(rp.node.left != null){
+                    pair p = new pair(rp.node.left, 1);
+                    st.push(p);
+                }
+            }else if(rp.status == 2){ // in, st++, right
+                inorder.add(rp.node.val);
+                rp.status += 1;
+                if(rp.node.right != null){
+                    pair p = new pair(rp.node.right, 1);
+                    st.push(p);
+                }
+            }else if(rp.status == 3){
+                postorder.add(rp.node.val);
                 st.pop();
             }
-        }
-        return ans;
+        } 
+        System.out.println(preorder);
+        System.out.println(inorder);
+        System.out.println(postorder);
+        return inorder;
     }
-}
 
-// Iterative Preorder Traversal
-
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
-class pair{
-    TreeNode node;
-    boolean ld;
-    boolean sd;
-    boolean rd;
-    pair(TreeNode node, boolean ld,boolean sd,boolean rd)
-    {
-        this.node = node;
-        this.ld = ld;
-        this.sd = sd;
-        this.rd = rd;
-    }
-}
-class Solution {
-    public List<Integer> preorderTraversal(TreeNode root) {
-        List<Integer> ans = new ArrayList<>();
-        Stack<pair> st = new Stack<>();
-        if(root == null)
-            return ans;
-        st.push(new pair(root,false,false,false));
-        while(st.size() > 0)
-        {
-            pair rp = st.peek();
-            if(rp.sd == false)
-            {
-                ans.add(rp.node.val);
-                rp.sd = true;
-            }
-            else if(rp.ld == false)
-            {
-                if(rp.node.left!=null)
-                    st.push(new pair(rp.node.left,false,false,false));
-                rp.ld = true;
-            }
-            
-            else if(rp.rd == false)
-            {
-               if(rp.node.right!=null)
-                    st.push(new pair(rp.node.right,false,false,false));
-                rp.rd = true; 
-            }
-            else
-            {
-                st.pop();
-            }
-        }
-        return ans;
-    }
-}
 
 // Morris Inorder Traversal
  public TreeNode RightMostNode(TreeNode left,TreeNode curr)
@@ -410,7 +347,8 @@ public static Node tranformBFLCT(Node node)
     return tranformBFLCT(node);
   }
 
-// Print single Child Nodes
+//
+Print single Child Nodes
 
  public static void printSingleChildNodes(Node node, Node parent){
     if(node == null)
@@ -535,39 +473,76 @@ class Solution {
     }
 }
 
-// Largest bst subtree
+// Balanced Binary Tree
 
-public static class pair{
+class Solution {
+    public class pair{
+        int ht;
+        boolean isBal;
+        pair(int ht,boolean isBal)
+        {
+            this.ht = ht;
+            this.isBal = isBal;
+        }
+    }
+    public pair isBalanced_(TreeNode node)
+    {
+        if(node==null)
+            return new pair(0,true);
+        
+        pair lp =  isBalanced_(node.left);
+        pair rp =  isBalanced_(node.right);
+        if(!lp.isBal || !rp.isBal || Math.abs(lp.ht-rp.ht) >1)
+            return new pair(-1,false);
+        return new pair(Math.max(lp.ht,rp.ht)+1,true);
+            
+    }
+    public boolean isBalanced(TreeNode root) {
+         return  isBalanced_(root).isBal;
+    }
+}
+
+// Largest BST in a binary Tree subtree
+
+    public static class pair{
         int min,max,size;
-        pair(int min,int m,int size)
+        boolean isBst;
+        pair(){}
+        pair(int min,int m,int size, boolean isBst)
         {
             this.max = max;
             this.min = min;
             this.size = size;
+            this.isBst = isBst;
         }
     }
     public static pair largestBst_(Node root)
     {
         if(root == null)
         {
-            return new pair(Integer.MAX_VALUE,Integer.MIN_VALUE,0);
+            return new pair(Integer.MIN_VALUE,Integer.MAX_VALUE,0, true);
         }
-        pair lp = largestBst_(root.left);
-        pair rp = largestBst_(root.right);
-       
-        if(lp.max < root.data && root.data < rp.min){
-            return new pair(Math.min(root.data,lp.min),Math.max(root.data,rp.max),lp.size+rp.size+1);
+        pair p = new pair();
+        pair left = largestBst_(root.left);
+        pair right = largestBst_(root.right);
+        p.min = Math.min(left.min, root.val);
+        p.max = Math.max(right.max, root.val);
+        p.isBst = left.isBst && right.isBst && (left.max < root.val && right.min > root.val);
+        if(p.isBst){
+            p.size = left.size + right.size + 1;
         }
-    return new pair(Integer.MIN_VALUE,Integer.MAX_VALUE,Math.max(lp.size,rp.size));
-
+        else{
+            p.size = Math.max(left.size, right.size) + 1;
+        }
+        return p;
     }
     static int largestBst(Node root)
     {
       return largestBst_(root).size;
     }
 
-//  camera in BT
 
+//  camera in BT
  class Solution {
     static int camera = 0;
     public int countCamera(TreeNode node)
@@ -592,6 +567,65 @@ public static class pair{
         if(countCamera(root) == -1)
             camera++;
         return camera;
+    }
+}
+
+
+// House Robbery 3 
+class pair{
+    int ri = 0;
+    int re = 0;
+    pair(int ri,int re)
+    {
+        this.ri = ri;
+        this.re = re;
+    }
+}
+class Solution {
+    public pair helper(TreeNode root)
+    {
+        if(root == null)
+            return new pair(0,0);
+        pair l = helper(root.left);
+        pair r = helper(root.right);
+        int ci = root.val + l.re + r.re;
+        int ce = Math.max(l.ri,l.re) + Math.max(r.ri,r.re);
+        return new pair(ci,ce);
+    }
+    public int rob(TreeNode root) {
+        pair p = helper(root);
+        return Math.max(p.ri,p.re);
+    }
+}
+
+// Longest Zig-zag path in a binary tree
+class Solution {
+    public class pair{
+        int lmax;
+        int rmax;
+        int self;
+        pair(){}
+        pair(int lmax, int rmax, int self){
+            this.lmax = lmax;
+            this.rmax = rmax;
+            this.self = self;
+        }
+    }
+    public pair longestZigZag_(TreeNode root){
+        if(root == null){
+            return new pair(-1, -1, -1);
+        }
+        pair ans = new pair();
+        pair left = longestZigZag_(root.left);
+        pair right = longestZigZag_(root.right);
+        ans.lmax = left.rmax + 1;
+        ans.rmax = right.lmax + 1;
+        ans.self = Math.max(Math.max(left.self, right.self), Math.max(ans.lmax, ans.rmax));
+        return ans;
+    }
+    public int longestZigZag(TreeNode root) {
+        pair ans = longestZigZag_(root);
+        return Math.max(Math.max(ans.self, ans.lmax), ans.rmax);
     }
 }
 
@@ -730,7 +764,6 @@ class Solution {
 }
 
 // construct BT from inorder and levelorder
-
  public static TreeNode buildTree_(int[] inorder,int[] levelorder,int si,int ei)
   {
       if(si > ei)
@@ -1565,7 +1598,7 @@ class Solution {
     }
 }
 
-// House Robber 3 
+// House Robbery 3 
 
 class pair{
     int ri = 0;
@@ -1861,6 +1894,50 @@ class Main {
     display(head);
   }
 
+}
+
+// Conevert Sorted LL into BST
+class Solution {
+    public TreeNode sortedListToBST(ListNode head) {
+        if(head == null){
+            return null;
+        }
+        return createBST(head, null);
+    }
+    public TreeNode createBST(ListNode head, ListNode tail){
+        ListNode fast = head;
+        ListNode slow = head;
+        if(head == tail) return null;
+        while(fast != tail && fast.next != tail){
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        TreeNode node = new TreeNode(slow.val);
+        node.left = createBST(head, slow);
+        node.right = createBST(slow.next, tail);
+        return node;
+    }
+}
+
+public class Solution {
+    /**
+     * @param root: the root of binary tree
+     * @return: new root
+     */
+    public TreeNode upsideDownBinaryTree(TreeNode root) {
+        if(root == null){
+            return null;
+        }
+        if(root.left == null && root.right == null){
+            return root;
+        }
+        TreeNode left =  upsideDownBinaryTree(root.left);
+        TreeNode right = upsideDownBinaryTree(root.right);
+        // Original left becomes root
+        left.left = right;
+        left.right = root;
+        return left;
+    }
 }
 
 // Width of shadow
@@ -2276,15 +2353,16 @@ public class Main {
   public static ArrayList<ArrayList<Integer>> burningTree(TreeNode root, int data) {
       if(root == null)
       return new ArrayList<>();
-      HashMap<Integer,ArrayList<Integer>> hm = new HashMap<>();          burningTree_(root, data, hm);
-    int i = 0;
-    ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
-    while(hm.containsKey(i))
-    {
-        ans.add(hm.get(i));
-        i++;
-    }
-    return ans;
+      HashMap<Integer,ArrayList<Integer>> hm = new HashMap<>();          
+      burningTree_(root, data, hm);
+      int i = 0;
+      ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+      while(hm.containsKey(i))
+      {
+            ans.add(hm.get(i));
+            i++;
+        }
+        return ans;
   }
   public static int burningTree_(TreeNode node, int data, HashMap<Integer,ArrayList<Integer>> hm)
   {
@@ -2324,19 +2402,7 @@ public class Main {
 
   // input_section=================================================
 
-  public static TreeNode createTree(int[] arr, int[] IDX) {
-    if (IDX[0] > arr.length || arr[IDX[0]] == -1) {
-      IDX[0]++;
-      return null;
-    }
-    TreeNode Treenode = new TreeNode(arr[IDX[0]++]);
-    Treenode.left = createTree(arr, IDX);
-    Treenode.right = createTree(arr, IDX);
-
-    return Treenode;
-  }
-
-  public static void solve() {
+public static void solve() {
     int n = scn.nextInt();
     int[] arr = new int[n];
     for (int i = 0; i < n; i++)
@@ -2359,6 +2425,83 @@ public class Main {
   public static void main(String[] args) {
     solve();
   }
+}
+
+// Amount of time for the binary tree to get infected 
+
+class Solution {
+    public static int amount = 0;
+    public void countTime(TreeNode root, TreeNode blocker, int time){
+        if(root == null || root == blocker){
+            return;
+        }
+        amount = Math.max(amount, time);
+        countTime(root.left, blocker, time+1);
+        countTime(root.right, blocker, time+1);
+    }
+    public int findNode(TreeNode root, int start){
+        if(root == null){
+            return -1;
+        }
+        if(root.val == start){
+            countTime(root, null, 0);
+            return 1;
+        }
+        int left = findNode(root.left, start);
+        if(left != -1){
+            countTime(root, root.left, left);
+            return left+1;
+        }
+        int right = findNode(root.right, start);
+        if(right != -1){
+            countTime(root, root.right, right);
+            return right+1;
+        }
+        return -1;
+    }
+    public int amountOfTime(TreeNode root, int start) {
+        amount = 0;
+        findNode(root, start);
+        return amount;
+    }
+}
+
+// LCA of Binary Tree
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    private static TreeNode LCA = null;
+    public boolean DFS_LCS(TreeNode root, TreeNode p, TreeNode q){
+        if(root == null){
+            return false;
+        }
+        boolean self = (root == p || root == q);
+        boolean left = DFS_LCS(root.left, p, q);
+        if(LCA != null){
+            return true;
+        }
+        boolean right = DFS_LCS(root.right, p, q);
+        if(LCA != null){
+            return true;
+        }
+        if((left && right) || (left && self) || (right && self)){
+            LCA = root;
+        }
+        return left || self || right;
+    }
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        LCA = null;
+        DFS_LCS(root, p ,q);
+        return LCA;
+    }
 }
 
 //  Clone a Binary Tree
@@ -2554,8 +2697,254 @@ class Solution {
 
 //path sum - 3
 
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int pathSum(TreeNode root, int targetSum) {
+        if(root == null)
+          return 0;
+    HashMap<Integer,Integer> hm = new HashMap<>();
+        hm.put(0,1);
+    int c = pathSum_(root,targetSum, 0, hm);
+        return c;
+    }
+    public int pathSum_(TreeNode root, int tar,int sum, HashMap<Integer,Integer>map)
+    {
+        if(root == null)
+          return 0;
+       int count = 0;
+        sum+=root.val;
+        if(map.containsKey(sum-tar)){
+            count+=map.get(sum - tar);
+        }
+        map.put(sum, map.getOrDefault(sum,0)+1);
+        count += pathSum_(root.left,tar,sum,map);
+        count += pathSum_(root.right,tar,sum,map);
+        map.put(sum,map.getOrDefault(sum,0)-1);
+        return count;
+    }
+}
+
 // ???????????
 
-// 
+// Longest Univalue Path
+
+class Solution {
+    public static int ans = 0;
+    public class pair{
+        int value;
+        int height;
+        pair(int value){
+            this.value = value;
+            this.height = 1;
+        }
+        pair(int value, int height){
+            this.value = value;
+            this.height = height;
+        }
+    }
+    public pair longestUnivaluePath_(TreeNode root){
+        if(root == null){
+            return new pair(Integer.MIN_VALUE, 0);
+        }
+        pair left = longestUnivaluePath_(root.left);
+        pair right = longestUnivaluePath_(root.right);
+        pair me = new pair(root.val);
+        if(left.value == me.value && right.value == me.value){
+            ans = Math.max(ans, left.height + right.height + 1);
+            me.height = Math.max(1, Math.max(left.height, right.height) + 1);
+            return me;
+        }else if(left.value != me.value && right.value != me.value){
+            ans = Math.max(ans, 1);
+            return me;
+        }else if(left.value == me.value){
+            me.height += left.height;
+            ans = Math.max(ans, Math.max(right.height, me.height));
+            return me;
+        }else if(right.value == me.value){
+            me.height += right.height;
+            ans = Math.max(ans, Math.max(left.height, me.height));
+            return me;
+        }else{
+            return null;
+        }
+    }
+    public int longestUnivaluePath(TreeNode root) {
+        ans = Integer.MIN_VALUE;
+        if(root == null){
+            return 0;
+        }
+        longestUnivaluePath_(root);
+        return ans - 1;
+    }
+}
+
+// Trim a Binary Search Tree
+class Solution {
+    public TreeNode trimBST_(TreeNode root, int low, int high){
+        if(root == null){
+            return root;
+        }
+        root.left = trimBST_(root.left, low, high);
+        root.right = trimBST_(root.right, low, high);
+        if(root.val < low){
+            System.out.println("Out of range : " + root.val);
+            return root.right;
+        }else if(root.val > high){
+            return root.left;
+        }
+        return root;
+    }
+    public TreeNode trimBST(TreeNode root, int low, int high) {
+        return trimBST_(root, low, high);
+    }
+}
+
+// find Duplicate BT
+
+class Solution {
+    List<TreeNode> res;
+    HashMap<String, Integer> hm;
+    public String pos(TreeNode root){
+        if(root == null){
+            return "#";
+        }
+        String serial = root.val + "," + pos(root.left) + "," + pos(root.right);
+        int freq = hm.getOrDefault(serial, 0);
+        hm.put(serial, ++freq);
+        if(freq == 2){
+            res.add(root);
+        }
+        return serial;
+    }
+    public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        res = new ArrayList<>();
+        hm = new HashMap<>();
+        pos(root);
+        return res;
+    }
+}
+
+// Sum of Distances in Tree
+
+class Solution {
+    public int root_results = 0;
+    public static ArrayList<Integer> count;
+    public int dfsRoot(ArrayList<ArrayList<Integer>> graph, int curr, int prev, int depth){
+        int totalCount = 1;
+        root_results += depth;
+        for(int nbr : graph.get(curr)){
+            if(nbr == prev){
+                continue;
+            }
+            totalCount += dfsRoot(graph, nbr, curr, depth+1);
+        }
+        count.set(curr, totalCount);
+        return totalCount;
+    }
+    public void DFS(ArrayList<ArrayList<Integer>> graph, int curr, int prev, int[] result, int n){
+        for(int nbr : graph.get(curr)){
+            if(nbr == prev){
+                continue;
+            }
+            result[nbr] = result[curr] - count.get(nbr) + (n - count.get(nbr));
+            DFS(graph, nbr, curr, result, n);
+        }
+    }
+    public int[] sumOfDistancesInTree(int n, int[][] edges) {
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>(n);
+        count = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            count.add(0);
+        }
+
+        for(int i=0; i<n; i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int[] edg : edges){
+            int u = edg[0];
+            int v = edg[1];
+            graph.get(u).add(v);
+            graph.get(v).add(u);
+        }
+        root_results = 0;
+        dfsRoot(graph, 0, -1, 0);
+        int[] result = new int[n];
+        result[0] = root_results;
+        DFS(graph, 0, -1, result, n);
+        return result;
+    }
+}
+
+// Flip Equivalent Binary Trees
+
+class Solution {
+    boolean flipEquiv_(TreeNode root1, TreeNode root2){
+        if(root1 == null && root2 == null){
+            return true;
+        }
+        if(root1 == null || root2 == null){
+            return false;
+        }
+        if(root1.val != root2.val){
+            return false;
+        }
+        boolean ans1 = true, ans2 = true;
+        ans1 = flipEquiv_(root1.left, root2.left) && flipEquiv_(root1.right, root2.right);
+        ans2 = flipEquiv_(root1.left, root2.right) && flipEquiv_(root1.right, root2.left);
+        return ans1 || ans2;
+    }
+    public boolean flipEquiv(TreeNode root1, TreeNode root2) {
+        if(root1 == null && root2 == null){
+            return true;
+        }else if(root1 == null || root2 == null){
+            return false;
+        }
+        return flipEquiv_(root1, root2);
+    }
+}
+
+
+// Check Completeness of a Binary Tree
+
+class Solution {
+    public boolean isCompleteTree_(TreeNode root){
+        if(root == null){
+            return true;
+        }
+        Queue<TreeNode> q = new LinkedList<>(Arrays.asList(root));
+        while(q.peek() != null){
+            TreeNode node = q.poll();
+            q.offer(node.left);
+            q.offer(node.right);
+        }
+
+        //Removing NULL from the end of Queue
+        while(!q.isEmpty() && q.peek() == null){
+            q.poll();
+        }
+
+        // Check if there are any remaining nodes in the Queue, if so then queue is not 
+        // complete as if there might be some null node
+        return q.isEmpty();
+    }
+    public boolean isCompleteTree(TreeNode root) {
+        return isCompleteTree_(root);
+    }
+}
+
 
 
