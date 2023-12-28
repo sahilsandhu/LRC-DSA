@@ -274,7 +274,6 @@ public static int largestHistogram(int[] heights){
     return 2;
     return -1;
  }
-}
 
 // Infix Conversion
 
