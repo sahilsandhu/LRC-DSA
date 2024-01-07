@@ -845,4 +845,59 @@ class Solution {
 }
 
 
-// 
+// Next greater element 1 
+
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        int n = nums2.length;
+        Stack<Integer> st = new Stack<>();
+        int[] nge = new int[n];
+        nge[n-1] = -1;
+        st.push(n-1);
+        for(int i=n-2; i>=0; i--){
+            while(st.size() > 0 && nums2[i] >= nums2[st.peek()])
+                st.pop();
+            if(st.size() == 0){
+                nge[i] = -1;
+            }
+            else{
+                nge[i] = nums2[st.peek()];
+            }
+            st.push(i);
+        }
+        HashMap<Integer, Integer> hm = new HashMap<>();
+        for(int j=0; j<n; j++){
+            hm.put(nums2[j], nge[j]);
+        }   
+
+        int[] ans = new int[nums1.length];
+        for(int j=0; j<nums1.length; j++){
+            ans[j] = hm.get(nums1[j]);
+        }
+        return ans;
+    }
+}
+
+// Next Greater Element - 2 :: Need to find the next greater element in the circular array
+
+class Solution {
+    public int[] nextGreaterElements(int[] nums) {
+        int n = nums.length;
+        int[] nge = new int[n];
+        Stack<Integer> st = new Stack<>();
+        st.push(n-1);
+        nge[n-1] = -1;
+        for(int i = 2*n-1; i>=0; i--){
+            while(st.size()>0 && nums[i%n] >= nums[st.peek()]){
+                st.pop();
+            }
+            if(st.size() == 0){
+                nge[i%n] = -1;
+            }else{
+                nge[i%n] = nums[st.peek()];
+            }
+            st.push(i%n);
+        }
+        return nge;
+    }
+}
