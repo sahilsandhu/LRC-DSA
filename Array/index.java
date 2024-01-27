@@ -707,3 +707,369 @@ class Solution {
         return true;
     }
 }
+
+
+// Car Fleet 
+
+class Solution {
+    class pair implements Comparable<pair>{
+        int position;
+        double time;
+        pair(int position, double time){
+            this.position = position;
+            this.time = time;
+        }
+        public int compareTo(pair o){
+            return this.position - o.position;
+        }
+    }
+    public int carFleet(int target, int[] position, int[] speed) {
+        int carFleet = 0, n = position.length;
+        pair[] ar = new pair[n];
+        for(int i=0; i<n; i++){
+            double time = (double) (target-position[i])/ (double) speed[i];
+            ar[i] = new pair(position[i], time);
+        }
+        Arrays.sort(ar);
+        for(int i=n-1; i>=1; i--){
+            if(ar[i].time >= ar[i-1].time){
+                ar[i-1] = ar[i];
+            }else{
+                carFleet++;
+            }
+        }
+        return carFleet+1;
+    }
+}
+
+
+// Target Sum || Count Distinct Pairs with given sum
+
+public static void targetSum(int[] ar, int target){
+        int n = ar.length, si = 0, ei = n-1;
+        Arrays.sort(ar);
+        while(si < ei){
+            if(si>0 && ar[si-1] == ar[si]){
+                si++;
+                continue;
+            }
+            int sum = ar[si] + ar[ei];
+            if(sum == target){
+                System.out.println(ar[si] + " " + ar[ei] +" -> "+sum);
+                si++;
+                ei--;
+            }else if(sum < target){
+                si++;
+            }else {
+                ei--;
+            }
+        }
+    }
+
+// 3 Sum || Distinc Pairs
+
+public static void target3Sum(int[] ar, int target){
+        int n = ar.length;
+        Arrays.sort(ar);
+        for(int i=0; i<n-3; i++){
+            if(i>0 && ar[i] == ar[i-1]){
+                continue;
+            }
+            int tar = target - ar[i];
+            target2Sum(ar, i+1, ar[i], tar);
+        }
+    }
+    public static void target2Sum(int[] ar, int i, int prev, int target){
+        int n = ar.length, si = 0, ei = n-1;
+        while(si < ei){
+            if(si>0 && ar[si-1] == ar[si]){
+                si++;
+                continue;
+            }
+            int sum = ar[si] + ar[ei];
+            if(sum == target){
+                System.out.println(prev +" "+ ar[si] + " " + ar[ei]);
+                si++;
+                ei--;
+            }else if(sum < target){
+                si++;
+            }else {
+                ei--;
+            }
+        }
+    }
+
+//   Minimum Domino Rotations For Equal Row
+
+class Solution {
+    public int minDominoRotations(int[] tops, int[] bottom) {
+        int num1 = tops[0], num2 = bottom[0], n = tops.length;
+        int ans1 = 0, ans2 = 0, ans3 = 0, ans4 = 0;
+        for(int i=1; i<n; i++){
+            //checking if num1 made a longest ar in top
+            if(ans1 != Integer.MAX_VALUE){
+                if(num1 == tops[i]){
+
+                }else if(num1 == bottom[i]){
+                    ans1++;
+                }else{
+                    ans1 = Integer.MAX_VALUE;
+                }
+            }
+            // checking if num1 made a longest ar in bottom
+            if(ans2 != Integer.MAX_VALUE){
+                if(num1 == tops[i]){
+                    ans2++;
+                }else if(num1 == bottom[i]){
+
+                }else{
+                    ans2 = Integer.MAX_VALUE;
+                }
+            }
+            // checking if num2 made a longest ar in top
+            if(ans3 != Integer.MAX_VALUE){
+                if(num2 == tops[i]){
+
+                }else if(num2 == bottom[i]){
+                    ans3++;
+                }else{
+                    ans3 = Integer.MAX_VALUE;
+                }
+            }
+            // checking if num2 made a longest ar in bottom
+            if(ans4 != Integer.MAX_VALUE){
+                if(num2 == tops[i]){
+                    ans4++;
+                }else if(num2 == bottom[i]){
+
+                }else{
+                    ans4 = Integer.MAX_VALUE;
+                }
+            }
+        }
+        int ans = Math.min(ans1, Math.min(ans2, Math.min(ans3, ans4)));
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+}
+
+//  Maximum Swap
+
+class Solution {
+    public int count(int num){
+        int count = 0;
+        while(num>0){
+            count++;
+            num = num/10;
+        }
+        return count;
+    }
+    public int[] numToAr(int num){
+        int sz = count(num);
+        int[] ar = new int[sz];
+        int pos = sz-1;
+        while(num > 0){
+            ar[pos--] = num%10;
+            num = num/10;
+        }
+        return ar;
+    }
+    public int arToNum(int[] ar){
+        int ans = 0, n = ar.length;
+        for(int i=0;i<n;i++){
+            ans = ans*10 + ar[i];
+        }
+        return ans;
+    }
+    public int maximumSwap(int num) {
+        int[] ar = numToAr(num);
+        
+        int n = ar.length;
+        int[] leftmax = new int[n];
+        leftmax[n-1] = n-1;
+        for(int i=n-2;i>=0;i--){
+            if(ar[i] > ar[leftmax[i+1]])
+                leftmax[i] = i;
+            else
+                leftmax[i] = leftmax[i+1];
+        }
+        
+        for(int i=0;i<n;i++)
+        {
+            if(ar[leftmax[i]] > ar[i]){
+                int temp = ar[leftmax[i]];
+                ar[leftmax[i]] = ar[i];
+                ar[i] = temp;
+                break;
+            }
+        }
+        int ans = arToNum(ar);
+        return ans;
+    }
+}
+
+// Boats to Save People
+
+class Solution {
+    public int numRescueBoats(int[] people, int limit) {
+        Arrays.sort(people);
+        int si=0, ei=people.length-1, ans = 0;
+        while(si <= ei){
+            int sum = people[si] + people[ei];
+            if(sum <= limit){
+                si++;
+                ei--;
+                ans++;
+            }else{
+                ei--;
+                ans++;
+            }
+        }
+        return ans;
+    }
+}
+
+// Smallest Range Covering Elements from K Lists
+
+class Solution {
+    public int[] smallestRange(List<List<Integer>> nums) {
+       int[] res = {-100000,100000};
+        int n = nums.size();
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->
+                                                     a[0] - b[0]);
+        
+        int max = Integer.MIN_VALUE;
+        for(int i=0;i<n;i++){
+            int me = nums.get(i).get(0);
+            int[] tba = {me,0,i};
+            max = Math.max(max,me);
+            pq.add(tba);
+        }
+        
+        while(true){
+            int[] min = pq.poll();
+            if(res[1]-res[0] > max-min[0]){
+                res[1] = max;
+                res[0] = min[0];
+            }
+            
+            min[1]++;
+            List<Integer> cl = nums.get(min[2]);
+            if(min[1] == cl.size()){
+                break;
+            }
+            else{
+                min[0] = cl.get(min[1]);
+                max = Math.max(max,cl.get(min[1]));
+                pq.add(min);
+            }
+        }
+        return res;
+    }
+}
+
+
+// First Missing Positive
+
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        // 1. Mark Element which are out of range and manage presence of 1
+        int n = nums.length;
+        boolean onePresent = false;
+        for(int i=0; i<n; i++){
+            if(nums[i] == 1){
+                onePresent = true;
+            }
+            if(nums[i] < 1 || nums[i] > n){
+                nums[i] = 1;
+            }
+        }
+        if(!onePresent){
+            return 1; 
+        }
+        // 2. Map Elements with index
+        for(int i=0; i<n; i++){
+            int idx = Math.abs(nums[i]);
+            nums[idx-1] = -Math.abs(nums[idx-1]);
+        }
+        // 3. find out missing index
+        for(int i=0; i<n; i++){
+            if(nums[i] > 0){
+                return i+1;
+            }
+        }
+        return n+1;
+    }
+}
+
+// Pascal Triangle
+
+class Solution {
+    public List<Integer> getRow(int row) {
+        int i = row;
+        long val = 1;
+        List<Integer> ans = new ArrayList<>();
+        for(int j=0;j<=i;j++)
+        {
+            ans.add((int)val);
+            val = val*(i-j)/(j+1);
+        }
+        return ans;
+    }
+}
+
+//  Find All Duplicates in an Array 
+
+class Solution {
+    public List<Integer> findDuplicates(int[] nums) {
+        List<Integer> al = new ArrayList<>();
+        for(int n : nums){
+            n = Math.abs(n);
+            if(nums[n-1] > 0){
+                nums[n-1]*=(-1);
+            }else{
+                al.add(n);
+            }
+        }
+        return al;
+    }
+}
+
+// find and Replace Pattern
+
+class Solution {
+    public boolean isMatching(String word, String pattern){
+        if(word.length() != pattern.length()){
+            return false;
+        }
+        int n = word.length();
+        HashMap<Character, Character> hm = new HashMap<>();
+        HashSet<Character> hs = new HashSet<>();
+        for(int i=0; i<n; i++){
+            char wch = word.charAt(i);
+            char pch = pattern.charAt(i);
+            if(hm.containsKey(pch)){
+                char rch = hm.get(pch);
+                if(rch != wch){
+                    return false;
+                }else{
+                    continue;
+                }
+            }
+            if(hs.contains(wch)){
+                return false;
+            }
+            hm.put(pch, wch);
+            hs.add(wch);
+        }
+        return true;
+    }
+    public List<String> findAndReplacePattern(String[] words, String pattern) {
+        List<String> ans = new ArrayList<>();
+        for(String word : words){
+            if(isMatching(word, pattern)){
+                ans.add(word);
+            }
+        }
+        return ans;
+    }
+}
