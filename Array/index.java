@@ -228,7 +228,7 @@ class Solution {
     }
 }
 
-// Find an element with occurence more than n/3 ::: Majority Element
+// Find an element with occurence more than n/3 
 
 class Solution {
     public List<Integer> majorityElement(int[] nums) {

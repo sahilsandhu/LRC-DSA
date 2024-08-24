@@ -893,7 +893,7 @@ int isMatch_(String s1,String s2,int l1,int l2,int[][]dp)
         if(s1.charAt(l1-1) == s2.charAt(l2-1) || s2.charAt(l2-1) == '?')
             return dp[l1][l2] = isMatch_(s1,s2,l1-1,l2-1,dp);
         
-        else if(s2.charAt(l2-1) == '*')i
+        else if(s2.charAt(l2-1) == '*')
         {
             boolean res = false;
             res = res || (isMatch_(s1,s2,l1-1,l2,dp) == 1); // * string
@@ -918,9 +918,7 @@ int isMatch_(String s1,String s2,int l1,int l2,int[][]dp)
     {
         while(i<p.length() && p.charAt(i)=='*' && p.charAt(i-1)=='*')
             i++;
-        if(i<p.length())
-            str+=p.charAt(i);
-        i++;
+        e
     }
         int l1 = s.length();
         int l2 = str.length();
@@ -2070,7 +2068,7 @@ class Solution
     //Function to return max value that can be put in knapsack of capacity W.
     static int knapSack(int W, int wt[], int val[], int n) 
     { 
-        int[][] dp = new int[n+1][W+1];
+       int[][] dp = new int[n+1][W+1];
        for(int i=0; i<=n; i++){
            for(int j=0; j<=W; j++){
                if(i==0 || j==0){
@@ -2152,7 +2150,7 @@ class Solution {
             Arrays.fill(d, -1);
         }
         canPartition(nums, nums.length, totalSum, dp);
-        return dp[nums.length][totalSum]==1;
+        ireturn dp[nums.length][totalSum]==1;
     }
 }
 

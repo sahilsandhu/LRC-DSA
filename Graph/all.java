@@ -250,6 +250,37 @@ boolean dfs_(ArrayList<Integer>[] graph, int src, int[] vis, int count){
         
     }
 
+// Is Graph Cyclic || Correct Ans [Striver]
+
+class Solution {
+    // Function to detect cycle in a directed graph.
+    public boolean isCycleUtil(ArrayList<ArrayList<Integer>> adj, int src, int[] vis, int[] pathVis){
+        vis[src] = 1;
+        pathVis[src] = 1;
+        for(int nbr : adj.get(src)){
+            if(vis[nbr] == 0){
+                if(isCycleUtil(adj, nbr, vis, pathVis) == true){
+                    return true;
+                }
+            }else if(vis[nbr] == 1 && pathVis[nbr] == 1){
+                return true;
+            }
+        }
+        pathVis[src] = 0;
+        return false;
+    }
+    public boolean isCyclic(int V, ArrayList<ArrayList<Integer>> adj) {
+        int[] vis = new int[V];
+        int[] pathVis = new int[V];
+        for(int i=0; i<V; i++){
+            if(isCycleUtil(adj, i, vis, pathVis)){
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
 // is graph Cyclic ===========================
 
 public boolean bfs_(ArrayList<ArrayList<Integer>> graph, int src, int[] vis){
@@ -388,6 +419,43 @@ static int[] topoSort(int V, ArrayList<ArrayList<Integer>> adj)
         return ans;
     }
 
+// Finding Cycle using DFS approach |||| Find Eventual Safe States
+
+
+class Solution {
+    public boolean isCyclicUtil(int[][] graph, int src, int[] vis, int[] pathVis, int[] check){
+        vis[src] = 1;
+        pathVis[src] = 1;
+        for(int nbr : graph[src]){
+            if(vis[nbr] == 0){
+                if(isCyclicUtil(graph, nbr, vis, pathVis, check)){
+                    return true;
+                }
+            }else if(vis[nbr] == 1 && pathVis[nbr] == 1){
+                return true;
+            }
+        }
+        pathVis[src] = 0;
+        check[src] = 1;
+        return false;
+    }
+    public List<Integer> eventualSafeNodes(int[][] graph) {
+        List<Integer> ans = new ArrayList<>();
+        int v = graph.length;
+        int[] vis = new int[v];
+        int[] check = new int[v];
+        int[] pathVis = new int[v];
+        for(int i=0; i<v; i++){
+            isCyclicUtil(graph, i, vis, pathVis, check);
+        }
+        for(int i=0; i<v; i++){
+            if(check[i] == 1){
+                ans.add(i);
+            }
+        }
+        return ans;
+    }
+}
 
 
 /// Find Eventual safe states ===============
@@ -527,6 +595,46 @@ public:
        
     }
 };
+
+// Course Schedule || Finding Cycle in Graph concept 
+
+class Solution {
+    public boolean canFinishHelper_(int src, ArrayList<Integer>[] graph, int[] vis, int[] pathVis){
+        vis[src] = 1;
+        pathVis[src] = 1;
+        for(int nbr : graph[src]){
+            if(vis[nbr] == 0){
+                if(canFinishHelper_(nbr, graph, vis, pathVis)){
+                    return true;
+                }
+            }else if(vis[nbr] == 1 && pathVis[nbr] == 1){
+                return true;
+            }
+        }
+        pathVis[src] = 0;
+        return false;
+    }
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int[] vis = new int[numCourses];
+        int[] pathVis = new int[numCourses];
+        ArrayList<Integer>[] graph = new ArrayList[numCourses];
+        for(int i=0; i< numCourses; i++){
+            graph[i] = new ArrayList<>();
+        }
+        for(int i=0;i<prerequisites.length;i++){
+            int src = prerequisites[i][0];
+            int dest = prerequisites[i][1];
+            graph[src].add(dest);
+        }
+        for(int i=0; i<numCourses; i++){
+            if(canFinishHelper_(i, graph, vis, pathVis)){
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
 
 // Course Schedule - 2
 
@@ -1065,8 +1173,6 @@ int c = 0;
         while(q.size() > 0)
         {
             int s = q.size();
-                       
-
             while(s-- > 0)
             {
                 auto rp = q.front();
@@ -1092,13 +1198,13 @@ int c = 0;
                                     
                                 }else if(count >= rp.size())
                                 {
-                                   ans.push_back(rp);
+                                    ans.push_back(rp);
                                     index.pop_back();
                                         
                                 }
                             }
-                          q.push(rp);
-                          rp.pop_back();
+                            q.push(rp);
+                            rp.pop_back();
                         }
                     }
                 }
@@ -1465,40 +1571,50 @@ for(int i=0;i<s1.length();i++){
 // Similar String groups =======================================
 
 class Solution {
-public:
-    int countServers(vector<vector<int>>& grid) {
-       int n = grid.size();
-       int m = grid[0].size();
-        vector<int> left(n,0);
-        vector<int> right(m,0);
-        for(int i=0;i<n;i++)
-        {
-            for(int j=0;j<m;j++)
-            {
-                left[i]+=grid[i][j];
-            }
+    public HashMap<String, String> parent = new HashMap<>();
+    public String findParent(String s){
+        if(parent.get(s).equals(s)){
+            return parent.get(s);
         }
-        for(int j=0;j<m;j++)
-         for(int i=0;i<n;i++)
-            {
-                right[j] += grid[i][j];
-            }
+        String temp = findParent(parent.get(s));
+        parent.put(s,temp);
+        return temp;
+    }
+    boolean isSame(String a, String b)
+    {
         int count = 0;
-         for(int i=0;i<n;i++)
-        {
-            for(int j=0;j<m;j++)
-            {
-                if(grid[i][j] == 1)
-                {
-                    if(left[i]>1 || right[j] > 1)
-                        count++;
+        for(int i=0; i<a.length(); i++){
+           if(a.charAt(i) != b.charAt(i)) count++;
+       } 
+    return count == 2 || count == 0;    
+    }
+    public int numSimilarGroups(String[] strs) {
+        for(int i=0; i<strs.length; i++){
+            parent.put(strs[i], strs[i]);
+        }
+        
+        for(int i=0; i<strs.length; i++){
+            for(int j=i+1; j<strs.length; j++){
+                if(!isSame(strs[i], strs[j])){
+                    continue;
+                }
+                String par1 = findParent(strs[i]);
+                String par2 = findParent(strs[j]);
+                if(!par1.equals(par2)){
+                    parent.put(par1, par2);
                 }
             }
         }
-        return count;
-        
+        int comps = 0;
+        for (HashMap.Entry<String,String> entry : parent.entrySet()) {
+            if(entry.getKey().equals(entry.getValue())){
+                comps++;
+            }
+        }
+        return comps;
+            
     }
-};
+}
 
 
 // Count sub island ================================================
@@ -2796,7 +2912,7 @@ public class Solution {
             {
                 int x = rp.i;
                 int y = rp.j;
-                vis[x][y] = 1;
+                //vis[x][y] = 1;
 
                 while(x>=0 && y>=0 && x<n && y<m && maze[x][y] == 0)
                 {
@@ -2809,8 +2925,7 @@ public class Solution {
                 return true;
                 if(vis[x][y] == 1)
                 continue;
-                //vis[x][y] = 1;
-                
+                vis[x][y] = 1;
                 q.add(new pair(x,y));
             }
         }
@@ -2958,7 +3073,77 @@ public class Solution {
     }
 }
 
+// 934. Shortest Bridge
 
+class Solution {
+    public class pair{
+        int row, col;
+        pair(int row, int col){
+            this.row = row;
+            this.col =col;
+        }
+    }
+    int[][] dirs = {{1,0},{0,1},{-1,0},{0,-1}};
+    public void dfs(int sr, int sc, int[][] grid, int[][] vis, Queue<pair> q){
+        vis[sr][sc] = 1;
+        q.add(new pair(sr, sc));
+        for(int[] dir : dirs){
+            int x = sr + dir[0];
+            int y = sc + dir[1];
+            if(x<0 || y<0 || x>=grid.length || y>=grid.length || vis[x][y] == 1 || grid[x][y] == 0){
+                continue;
+            }
+            dfs(x, y, grid, vis, q);
+        }
+    }
+    public int bfs(Queue<pair> q, int[][] vis, int[][] grid){
+        int level = 0;
+        while(q.size() > 0){
+            int sz = q.size();
+            while(sz-- > 0){
+                pair rp = q.remove();
+                int i = rp.row;
+                int j = rp.col;
+                for(int[] dir : dirs){
+                    int x = i + dir[0];
+                    int y = j + dir[1];
+                    if(x<0 || y<0 || x>=grid.length || y>=grid.length || vis[x][y] == 1){
+                        continue;
+                    }
+                    if(grid[x][y] == 1){
+                        return level;
+                    }
+                    vis[x][y] = 1;
+                    q.add(new pair(x, y));
+                }
+            }
+            level++;
+        }
+        return -1;
+    }
+    public int shortestBridge(int[][] grid) {
+        int n = grid.length;
+        Queue<pair> q = new ArrayDeque<>();
+        int[][] vis = new int[n][n];
+        boolean isVis = false;
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                if(grid[i][j] == 1){
+                    dfs(i, j, grid, vis, q);
+                    isVis = true;
+                    break;
+                }
+            }
+            if(isVis){
+                break;
+            }
+        }
+        for(pair p : q){
+            System.out.println(p.row +" "+ p.col);
+        }
+        return bfs(q, vis, grid);
+    }
+}
 
 // Graph Valid Tree
 

@@ -347,8 +347,7 @@ public static Node tranformBFLCT(Node node)
     return tranformBFLCT(node);
   }
 
-//
-Print single Child Nodes
+// Print single Child Nodes
 
  public static void printSingleChildNodes(Node node, Node parent){
     if(node == null)
@@ -387,7 +386,7 @@ static int tilt = 0;
 // Diameter of a Binary Tree
 
 public static int height(Node node)
-    {
+    { 
         if(node == null)
             return -1;
         return Math.max(height(node.left),height(node.right))+1;
@@ -710,7 +709,7 @@ class Solution {
         
     } 
     public TreeNode buildTree(int[] preorder, int[] inorder)     {
-       
+        
         return buildTree_(preorder,inorder,0,preorder.length-1,0,inorder.length-1);
     }
 }
@@ -1174,43 +1173,6 @@ public class Main {
       }return ans;
   }
 
-  // input_section=================================================
-
-  public static TreeNode createTree(int[] arr, int[] IDX) {
-    if (IDX[0] > arr.length || arr[IDX[0]] == -1) {
-      IDX[0]++;
-      return null;
-    }
-    TreeNode node = new TreeNode(arr[IDX[0]++]);
-    node.left = createTree(arr, IDX);
-    node.right = createTree(arr, IDX);
-
-    return node;
-  }
-
-  public static void solve() {
-    int n = scn.nextInt();
-    int[] arr = new int[n];
-    for (int i = 0; i < n; i++)
-      arr[i] = scn.nextInt();
-
-    int[] IDX = new int[1];
-    TreeNode root = createTree(arr, IDX);
-
-    ArrayList<ArrayList<Integer>> ans = verticalOrderTraversal(root);
-    int idx = 0;
-    for (ArrayList<Integer> i : ans) {
-      System.out.print(idx++ + " -> ");
-      for (Integer j : i)
-        System.out.print(j + " ");
-      System.out.println();
-    }
-  }
-
-  public static void main(String[] args) {
-    solve();
-  }
-}
 
 // V O T : 3
 
@@ -1377,7 +1339,7 @@ public static void exactlyOneChild_(TreeNode root,ArrayList<Integer> ans)
     return;
   }
 
-//// count all single child parent in BT
+// count all single child parent in BT
 
 
 public static TreeNode createTree(int[] arr, int[] IDX) {
@@ -1555,12 +1517,6 @@ class CBTInserter {
     }
 }
 
-/**
- * Your CBTInserter object will be instantiated and called as such:
- * CBTInserter obj = new CBTInserter(root);
- * int param_1 = obj.insert(val);
- * TreeNode param_2 = obj.get_root();
- */
 
 // Count Good nodes 
 
@@ -1853,48 +1809,6 @@ class Main {
   return root;
 }
 
-  // Input_code===================================================
-
-  public static void display(Node node) {
-    if (node == null)
-      return;
-
-    StringBuilder sb = new StringBuilder();
-    sb.append((node.left != null ? node.left.val : "."));
-    sb.append(" -> " + node.val + " <- ");
-    sb.append((node.right != null ? node.right.val : "."));
-
-    System.out.println(sb.toString());
-
-    display(node.left);
-    display(node.right);
-
-  }
-
-  public static Node makeList(int n) {
-    Node dummy = new Node(-1);
-    Node prev = dummy;
-    while (n-- > 0) {
-      Node node = new Node(scn.nextInt());
-      prev.right = node;
-      node.left = prev;
-      prev = prev.right;
-    }
-
-    Node head = dummy.right;
-    head.left = dummy.right = null;
-
-    return head;
-  }
-
-  public static void main(String[] args) {
-    Node head = makeList(scn.nextInt());
-
-    head = SortedDLLToBST(head);
-    display(head);
-  }
-
-}
 
 // Conevert Sorted LL into BST
 class Solution {
@@ -1973,37 +1887,6 @@ public class Main {
        findwidth(root,maxMin,0);
        return maxMin[1]-maxMin[0]+1;
     }
-
-    // input_section=================================================
-
-    public static TreeNode createTree(int[] arr, int[] IDX) {
-        if (IDX[0] > arr.length || arr[IDX[0]] == -1) {
-            IDX[0]++;
-            return null;
-        }
-        TreeNode node = new TreeNode(arr[IDX[0]++]);
-        node.left = createTree(arr, IDX);
-        node.right = createTree(arr, IDX);
-
-        return node;
-    }
-
-    public static void solve() {
-        int n = scn.nextInt();
-        int[] arr = new int[n];
-        for (int i = 0; i < n; i++)
-            arr[i] = scn.nextInt();
-
-        int[] IDX = new int[1];
-        TreeNode root = createTree(arr, IDX);
-
-        System.out.println(width(root));
-    }
-
-    public static void main(String[] args) {
-        solve();
-    }
-}
 
 // Boundary Traversal of a binary Tree
 
@@ -2426,6 +2309,68 @@ public static void solve() {
     solve();
   }
 }
+
+
+// Print all nodes at K distance
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    private List<TreeNode> findNodes(TreeNode root, TreeNode target){
+        if(root == null){
+            return new ArrayList<>();
+        }
+        List<TreeNode> temp = new ArrayList<>();
+        if(root == target){
+            temp.add(root);
+            return temp;
+        }
+        List<TreeNode> leftList = findNodes(root.left, target);
+        if(leftList.size() > 0){
+            leftList.add(root);
+            return leftList;
+        }
+        List<TreeNode> rightList = findNodes(root.right, target);
+        if(rightList.size() > 0){
+            rightList.add(root);
+            return rightList;
+        }
+        return temp;
+    }
+    private void getKLevelNodes(TreeNode root, TreeNode block, List<Integer> ans, 
+    int k){
+        if(root == null){
+            return;
+        }
+        if(root == block){
+            return;
+        }
+        if(k == 0){
+            ans.add(root.val);
+            return;
+        }
+        getKLevelNodes(root.left, block, ans, k-1);
+        getKLevelNodes(root.right, block, ans, k-1);
+    }
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+        List<TreeNode> ntr = findNodes(root, target);
+        List<Integer> ans = new ArrayList<>();
+        for(int i=0; i<ntr.size(); i++){
+            TreeNode block = (i==0) ? null : ntr.get(i-1);
+            getKLevelNodes(ntr.get(i), block, ans, k);
+            k--;
+        }
+        return ans;
+    }
+}
+
 
 // Amount of time for the binary tree to get infected 
 
