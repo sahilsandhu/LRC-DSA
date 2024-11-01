@@ -1,3 +1,1072 @@
+// Rotate an Array
+
+// Finding Maximum and minimum in an array
+class Solution {
+    public Pair<Long, Long> getMinMax(int[] arr) {
+        Pair<Long, Long> p = new Pair<>(-1L, -1L);
+        Long min = Long.MAX_VALUE;
+        Long max = Long.MIN_VALUE;
+        for(int val : arr){
+            min = Math.min(min, val);
+            max = Math.max(max, val);
+        }
+        p = new Pair((Long)min, (Long)max);
+        return p;
+    }
+}
+
+// Finding Kth Smallest Element in an Array
+
+// Approach 1 : Sorting
+
+// Approach 2 : Min HEAP
+public static int kthSmallest(int[] arr, int k) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for(int i=0; i<arr.length; i++){
+            pq.add(arr[i]);
+        }
+        while(k-- > 1){
+            pq.remove();
+        }
+        return pq.peek();
+    }
+
+// Approach 3 :: Quick Select Method 
+class Solution {
+    private static int findPivotIdx(int[] ar, int left, int right){
+        int pivot = left;
+        int l = left+1;
+        int r = right;
+        while(l <= r){
+            if(ar[l] > ar[pivot] && ar[r] < ar[pivot]){
+                int temp = ar[l];
+                ar[l] = ar[r];
+                ar[r] = temp;
+                l++;
+                r--;
+            }else if(ar[l] < ar[pivot]){
+                l++;
+            }else if(ar[r] > ar[pivot]){
+                r--;
+            }
+        }
+        int temp2=ar[left];
+        ar[left]=ar[r];
+        ar[r]=temp2;
+        return r;
+    }
+
+    public static int kthSmallest(int[] ar, int k) {
+        int left = 0, right = ar.length-1;
+        while(true){
+            int idx = findPivotIdx(ar, left, right);
+            if(idx == k-1){
+                return ar[idx];
+            }else if(idx < k){
+                left = idx+1;
+            }else{
+                right = idx-1;
+            }
+        }
+        //return -1;
+    }
+}
+
+// Sort 0, 1, 2
+public static void sort012(int a[], int n)
+    {
+        int l = 0;
+        int r = n-1;
+        int idx = 0;
+        while(idx <= r){
+            if(a[idx] == 1){
+                idx++;
+                continue;
+            }else if(a[idx] == 0){
+                int temp = a[idx];
+                a[idx] = a[l];
+                a[l] = temp;
+                l++;
+                idx++;
+            }else if(a[idx] == 2){
+                int temp = a[idx];
+                a[idx] = a[r];
+                a[r] = temp;
+                r--;
+            }
+        }
+    }
+
+// Move All Negative elements to one side of the array
+
+ void rearrange(ArrayList<Integer> arr) {
+        int idx = 0;
+        int n = arr.size();
+        for(int i=0; i<n; i++){
+            if(arr.get(i) < 0){
+                swap();
+                idx++;
+            }else{
+                continuel
+            }
+        }
+    }
+  
+// Maximum Contiguous SubarraySum 
+
+long maxSubarraySum(int[] arr) {
+        long maxSum = Integer.MIN_VALUE, maxTillNow = 0;
+        for(int i=0; i<arr.length; i++){
+            maxTillNow += arr[i];
+            maxSum = Math.max(maxSum, maxTillNow);
+            maxTillNow = Math.max(0, maxTillNow);
+        }
+        return maxSum;
+    }
+
+// Minimize the Heights 2  || Minimize the maximum difference between heights
+
+int getMinDiff(int[] arr, int n, int k) {
+        Arrays.sort(arr);
+        int ans = arr[n-1] - arr[0];
+        int tempMin = arr[0];
+        int tempMax = arr[n-1];
+        for(int i=1; i<n; i++){
+            if(arr[i]-k < 0){
+                continue;
+            }
+            tempMin = Math.min(arr[0]+k, arr[i]-k);
+            tempMax = Math.max(arr[i-1]+k, arr[n-1]-k);
+            ans = Math.min(ans, tempMax-tempMin);
+        }
+        return ans;
+    }
+
+
+// Find The Duplicate Number 
+
+/// Approach 1 : Naive approach of checking for each number
+/// Approach 2 : HashMap
+
+/// Approach 3 : Binary Search if the array is sorted || Otherwise we can also sort the array
+public int findDuplicate(int[] nums) {
+        int low = 1, high = nums.length-1;
+        while(low < high){
+            int mid = (low + high)/2;
+            int count = 0;
+            for(int n : nums){
+                if(n <= mid){
+                    count++;
+                }
+            }
+            if(count <= mid){
+                low = mid+1;
+            }else{
+                high = mid;
+            }
+        }
+        return low;
+    }
+
+/// Approach 4 : Bit Maniputation if Array is sorted
+public int findDuplicate(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        for(int i=0; i<n-1; i++){
+            if((nums[i]^nums[i+1]) == 0){
+                return nums[i];
+            }
+        }
+        return -1;
+    }
+
+// Approach 5 : Slow and Fast Pointer Approach ||| This only works with the do - while loop
+
+int findDuplicate(std::vector<int>& nums) {
+        int slow = nums[0];
+        int fast = nums[0];
+
+        // Find the intersection point of the two pointers
+        do {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        } while (slow != fast);
+
+        // Find the entrance of the cycle
+        slow = nums[0];
+        while (slow != fast) {
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+
+        return slow;
+    }
+
+// Find the element that appears once in an array where every other element appears twice
+//  Mostly same type of solutions here also 
+
+// Approach -> Binary Search || We try to create the groups of even and odd position
+
+public int findElement(int[] ar){
+    int low = 0, high = ar.length-2;
+    while(low < high){
+        int mid = (low + high)/2;
+        if(ar[mid] == ar[mid^1]){
+            low = mid+1;
+        }else{
+            high = mid-1;
+        }
+    }
+    return ar[low];
+}
+
+
+
+// Find all Duplicates Element || All Elements Repeated Twice
+
+// Approach 1 : Hashmap approach
+
+// Approach 2 : Iteration and Indexing
+// Note : Elements should be in range of 1-n
+class Solution {
+    public List<Integer> findDuplicates(int[] nums) {
+        List<Integer> al = new ArrayList<>();
+        for(int n : nums){
+            int abs = Math.abs(n);
+            if(nums[abs-1] > 0){
+                nums[abs-1]*=-1;
+            }else{
+                al.add(abs);
+            }
+        }
+        return al;
+    }
+}
+
+// Approach 3 : Bit Manipulation
+
+public int[] twoRepeated(int size, int arr[]) {
+        int n = size-2;
+        int[] ans = new int[2];
+        int xor = arr[0];
+        for(int i=1; i<size; i++){
+            xor ^= arr[i];
+        }
+        for(int i=1; i<=n; i++){
+            xor ^= i;
+        }
+        int v1 = 0, v2 = 0;
+        int setBit = xor & ~(xor-1);
+        for(int i=0; i<size; i++){
+            int a = setBit&arr[i];
+            if(a != 0){
+                v1 ^= arr[i];
+            }else{
+                v2 ^= arr[i];
+            }
+        }
+        
+        
+        for(int i=1; i<=n; i++){
+            int a = setBit&i;
+            if(a != 0){
+                v1 ^= i;
+            }else{
+                v2 ^= i;
+            }
+        }
+        
+        ans[0] = v2;
+        ans[1] = v1;
+        return ans;
+        
+    }
+
+// Repeat and Missing Number
+
+int[] findTwoElement(int arr[]) {
+        int xor = 0;
+        for(int val : arr){
+            xor ^= val;
+        }
+        for(int i=1; i<=arr.length; i++){
+            xor ^= i;
+        }
+        
+        int setBit = xor & ~(xor-1);
+        int v1 = 0, v2 = 0;
+        for(int i=0; i<arr.length; i++){
+            int a = arr[i]&setBit;
+            if(a != 0){
+                v1 ^= arr[i];
+            }else{
+                v2 ^= arr[i];
+            }
+        }
+        
+        for(int i=1; i<=arr.length; i++){
+            int a = i&setBit;
+            if(a != 0){
+                v1 ^= i;
+            }else{
+                v2 ^= i;
+            }
+        }
+        
+        int[] ans = new int[2];
+        ans[0] = v2;
+        ans[1] = v1;
+        return ans;
+    }
+
+
+// Merge Sorted Arrays 
+
+public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int i=0, j=0;
+        int[] ans = new int[m+n];
+        int k = 0;
+        while(i<m && j<n){
+            if(nums1[i] < nums2[j]){
+                ans[k++] = nums1[i++];
+            }else if(nums1[i] > nums2[j]){
+                ans[k++] = nums2[j++];
+            }else{
+                ans[k++] = nums1[i++];
+                ans[k++] = nums2[j++];
+            }
+        }
+        while(i < m){
+            ans[k++] = nums1[i++];
+        }
+        while(j < n){
+            ans[k++] = nums2[j++];
+        }
+        for(int x=0; x<(m+n); x++){
+            nums1[x] = ans[x];
+        }
+    }
+
+
+// Merge Overlapping Intervals 
+
+class Solution {
+    public class pair implements Comparable<pair>{
+        int x, y;
+        pair(int x, int y){
+            this.x = x;
+            this.y = y;
+        }
+
+        public int compareTo(pair o){
+            if(this.x == o.x){
+                return this.y - o.y;
+            }else{
+                return this.x - o.x;
+            }
+        }
+    }
+    public int[][] merge(int[][] intervals) {
+        int n = intervals.length;
+        pair[] ar = new pair[n];
+        for(int i=0; i<n; i++){
+            ar[i] = new pair(intervals[i][0], intervals[i][1]);
+        }
+        Arrays.sort(ar);
+        Stack<pair> st = new Stack<>();
+        st.push(ar[0]);
+        for(int i=1; i<n; i++){
+            pair cp = ar[i];
+            pair rp = st.pop();
+            if(cp.x > rp.y){
+                st.push(rp);
+                st.push(cp);
+            }else{
+                st.push(new pair(Math.min(cp.x, rp.x), Math.max(cp.y, rp.y)));
+            }
+        }
+        int[][] ans = new int[st.size()][2];
+        for(int i=ans.length-1; i>=0; i--){
+            pair rp = st.pop();
+            ans[i][0] = rp.x;
+            ans[i][1] = rp.y;
+        }
+        return ans;
+    }
+}
+
+// Merge Sort 
+
+class Solution
+{
+    void merge(int arr[], int l, int m, int r)
+    {
+        int n1 = m-l+1;
+        int n2 = r-m;
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+        for(int i=0; i<n1; i++){
+            L[i] = arr[l+i];
+        }
+        for(int j=0; j<n2; j++){
+            R[j] = arr[m+j+1];
+        }
+        int k=l, i=0, j=0;
+        while(i<n1 && j<n2){
+            if(L[i] < R[j]){
+                arr[k++] = L[i++];
+            }else if(L[i] > R[j]){
+                arr[k++] = R[j++];
+            }else{
+                arr[k++] = L[i++];
+                arr[k++] = R[j++];
+            }
+        }
+        while(i < n1){
+            arr[k++] = L[i++];
+        }
+        while(j < n2){
+            arr[k++] = R[j++];
+        }
+    }
+    void mergeSort(int arr[], int l, int r)
+    {
+        if(l < r){
+            int m = (l+r)/2;
+            mergeSort(arr, l, m);
+            mergeSort(arr, m+1, r);
+            merge(arr, l, m, r);
+        }
+    }
+}
+
+// Count Inversion :::
+
+static long merge(long[] arr, int si, int mid, int ei){
+        int n1 = mid-si+1;
+        int n2 = ei-mid;
+        long ans = 0;
+        long[] L = new long[n1];
+        long[] R = new long[n2];
+        for(int i=0; i<n1; i++){
+            L[i] = arr[i+si];
+        }
+        for(int j=0; j<n2; j++){
+            R[j] = arr[j+mid+1];
+        }
+        
+        int k=si, i=0, j=0;
+        while(i<n1 && j<n2){
+            if(L[i] <= R[j]){
+                arr[k++] = L[i++];
+            }else if(L[i] > R[j]){
+                ans += (n1-i);
+                arr[k++] = R[j++];
+            }
+            // else{
+            //   arr[k++] = L[i++];
+            //   arr[k++] = R[j++];
+            // }
+        }
+        while(i < n1){
+            arr[k++] = L[i++];
+        }
+        while(j < n2){
+            arr[k++] = R[j++];
+        }
+        return ans;
+    }
+    static long mergeSort(long[] arr, int si, int ei){
+        long ans = 0;
+        if(si < ei){
+            int mid = (si + ei)/2;
+            ans += mergeSort(arr, si, mid);
+            ans += mergeSort(arr, mid+1, ei);
+            ans += merge(arr, si, mid, ei);
+        }
+        return ans;
+    }
+    static long inversionCount(long arr[], int n) {
+        return mergeSort(arr, 0, n-1);
+    }
+
+// Target Sum Pair ||| 2 Sum 
+
+public static ArrayList<ArrayList<Integer>> getPairs(int[] arr) {
+        Arrays.sort(arr);
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        int si = 0, ei = arr.length-1;
+        while(si < ei){
+            int sum = arr[si] + arr[ei];
+            if(sum == 0){
+                ArrayList<Integer> temp = new ArrayList<>();
+                temp.add(arr[si]);
+                temp.add(arr[ei]);
+                ans.add(temp);
+                si++;
+                ei--;
+            }else if(sum < 0){
+                si++;
+            }else if(sum > 0){
+                ei--;
+            }
+        }
+        return ans;
+    }
+
+
+// Triplet Sum || 3 Sum
+
+public static boolean find3Numbers(int arr[], int n, int x) {
+        Arrays.sort(arr);
+        for(int i=0; i<n; i++){
+            int si = i+1, ei = n-1;
+            while(si < ei){
+                int sum = arr[i] + arr[si] + arr[ei];
+                if(sum == x){
+                    return true;
+                }else if(sum < x){
+                    si++;
+                }else{
+                    ei--;
+                }
+            }
+        }
+        return false;
+    }
+
+
+// Commmon in 3 Sorted Arrays
+
+public List<Integer> commonElements(List<Integer> arr1, List<Integer> arr2,
+                                        List<Integer> arr3) {
+                                            
+                                            
+        int l1=0, l2=0, l3=0;
+        int sz1 = arr1.size(), sz2 = arr2.size(), sz3 = arr3.size();
+        
+        List<Integer> ans = new ArrayList<>();
+        while(l1 < sz1 && l2 < sz2 && l3 < sz3){
+            if(arr1.get(l1) == arr2.get(l2) && arr2.get(l2) == arr3.get(l3)){
+                ans.add(arr1.get(l1));
+                l1++;
+                l2++;
+                l3++;
+            }else if(arr1.get(l1) < arr2.get(l2)){
+                l1++;
+            }else if(arr2.get(l2) < arr3.get(l3)){
+                l2++;
+            }else{
+                l3++;
+            }
+        }
+        return ans;
+    }
+
+//  SubArray with 0 Sum
+
+static boolean findsum(int arr[],int n)
+    {
+        int sum = 0;
+        HashSet<Integer> hs = new HashSet<>();
+        for(int val : arr){
+            sum += val;
+            if(val == 0 || sum == 0 || hs.contains(sum)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+// Maximum Product SubArray
+
+long maxProduct(int[] arr, int n) {
+    int maxSoFar = arr[0];
+    int maxEndingHere = arr[0];
+    int minEndingHere = arr[0];
+    for(int i=1; i<n; i++){
+        int temp = Math.max(arr[i], Math.max(maxEndingHere*arr[i], 
+        minEndingHere*arr[i]));
+        minEndingHere = Math.min(arr[i], Math.min(maxEndingHere*arr[i], 
+        minEndingHere*arr[i]));
+        maxEndingHere = temp;
+        maxSoFar = Math.max(maxSoFar, maxEndingHere);
+    }
+    return maxSoFar;
+}
+
+
+// length of Longest Conseuting Subsequence
+
+static int findLongestConseqSubseq(int arr[], int N)
+	{
+	   int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+	   HashSet<Integer> hs = new HashSet<>();
+	   for(int a : arr){
+	       min = Math.min(a, min);
+	       max = Math.max(a, max);
+	       hs.add(a);
+	   }
+	   
+	   int count = 0;
+	   int ans = Integer.MIN_VALUE;
+	   while(min <= max){
+	       if(hs.contains(min)){
+	           count++;
+	           ans = Math.max(ans, count);
+	       }else{
+	           count = 0;
+	       }
+	       min++;
+	   }
+	   return ans;
+	  
+	}
+
+// Approach 2 : Sorting
+static int findLongestConseqSubseq(int arr[], int N)
+	{
+	   Arrays.sort(arr);
+	   int min = arr[0];
+	   int ans = 0, cnt = 1;
+	   for(int i=1; i<N; i++){
+	       if(arr[i] == min){
+	           continue;
+	       }
+	       if(arr[i] == min+1){
+	           cnt++;
+	           ans = Math.max(ans, cnt);
+	           min = arr[i];
+	       }else{
+	           cnt = 1;
+	           min = arr[i];
+	       }
+	   }
+	   return Math.max(ans, cnt);
+	}
+
+
+// Majority Element
+
+public int majorityElement(int[] nums) {
+    int count = 1, val = nums[0];
+    for(int i=1; i<nums.length; i++){
+        if(val == nums[i]){
+            count++;
+        }else{
+            count--;
+        }
+        if(count == 0){
+            count = 1;
+            val = nums[i];
+        }
+    }
+    int num = 0;
+    for(int v : nums){
+        if(v == val){
+            num++;
+        }
+    }
+    return (num > nums.length/2) ? val : -1;
+}
+
+// Majority Element - 2
+
+public List<Integer> majorityElement(int[] nums) {
+        List<Integer> ans = new ArrayList<>();
+        int val1=nums[0], count1=1, val2=0, count2=0, n=nums.length;
+        for(int i=1; i<n; i++){
+            if(val1 == nums[i]){
+                count1++;
+            }
+            else if(val2 == nums[i]){
+                count2++;
+            }else{
+                if(count1 == 0){
+                    val1 = nums[i];
+                    count1=1;
+                }else if(count2 == 0){
+                    val2 = nums[i];
+                    count2=1;
+                }else{
+                    count1--;
+                    count2--;
+                }
+            }
+        }
+
+        int ct1=0, ct2=0;
+        for(int val : nums){
+            if(val1 == val){
+                ct1++;
+            }
+            if(val2 == val){
+                ct2++;
+            }
+        }
+        if(ct1 > nums.length/3){
+            ans.add(val1);
+        }
+        if(ct2 > nums.length/3 && val1 != val2){
+            ans.add(val2);
+        }
+        return ans;
+    }
+
+
+// Mpjority Element 3 || Element Present n/k times
+
+private class ele{
+        int e;
+        int c;
+        ele(){}
+    }
+    public int countOccurence(int[] arr, int n, int k) {
+        ele[] temp = new ele[k-1];
+        for(int i=0; i<k-1; i++){
+            temp[i] = new ele();
+        }
+        for(int i=0; i<k-1; i++){
+            temp[i].c = 0;
+        }
+        
+        for(int i=0; i<n; i++){
+            int j;
+            for(j=0; j<k-1; j++){
+                if(temp[j].e == arr[i]){
+                    temp[j].c++;
+                    break;
+                }
+            }
+            if(j == k-1){
+                int l;
+                for(l=0; l<k-1; l++){
+                    if(temp[i].c == 0){
+                        temp[i].e = arr[i];
+                        temp[i].c = 1;
+                        break;
+                    }
+                }
+                if(l == k-1){
+                    for(l=0; l<k-1; l++){
+                        temp[i].c -= 1;
+                    }
+                }
+            }
+        }
+        int ans = 0;
+        for(int i=0; i<k-1; i++){
+            int ac = 0;
+            for (int j=0; j<n; j++){
+                if(arr[j] == temp[i].e){
+                    ac++;
+                }
+            }
+ 
+            if (ac > n/k){
+                ans++;
+            }
+        }
+        return ans;
+    }
+
+
+/// Buy and Sell Stock Exactly Once
+
+class Solution {
+    public int maxProfit(int[] prices) {
+        int buy = prices[0];
+        int ans = 0;
+        for(int i=0; i<prices.length; i++){
+            int sell = prices[i];
+            ans = Math.max(ans, sell-buy);
+            buy = Math.min(buy, prices[i]);
+        }
+        return ans;
+    }
+}
+
+// Buy and Sell Stock any Number of Times ||| Array Solution 
+
+public int maxProfit(int[] prices) {
+        int ans = 0;
+        for(int i=1; i<prices.length; i++){
+            if(prices[i] > prices[i-1]){
+                ans += (prices[i]-prices[i-1]);
+            }
+        }
+        return ans;
+    }
+
+
+
+// Array Subset
+
+public String isSubset( long a1[], long a2[], long n, long m) {
+        Arrays.sort(a1);
+        Arrays.sort(a2);
+        int si=0, sj=0;
+        if(n < m){
+            return "No";
+        }
+        while(sj < m){
+            if(a1[si] == a2[sj]){
+                si++;
+                sj++;
+            }else if(a1[si] < a2[sj]){
+                si++;
+            }else{
+                return "No";
+            }
+        }
+        return "Yes";
+    }
+
+// Approach 2 ::: HashSet Operation -> TC : O(N) and SC : O(N)
+
+// Trapping Rain Water |||  SC -> O(N), TC -> (N) 
+
+static long trappingWater(int arr[]) {
+        int n = arr.length;
+        int[] leftMax = new int[n];
+        int[] rightMax = new int[n];
+        leftMax[0] = arr[0];
+        for(int i=1; i<n; i++){
+            leftMax[i] = Math.max(arr[i], leftMax[i-1]);
+        }
+        rightMax[n-1] = arr[n-1];
+        for(int i=n-2; i>=0; i--){
+            rightMax[i] = Math.max(arr[i], rightMax[i+1]);
+        }
+        
+        long ans = 0;
+        for(int i=0; i<n; i++){
+            ans += (Math.min(leftMax[i], rightMax[i]) - arr[i]);
+        }
+        return ans;
+    }
+
+// Approach 2 : 2 Pointer
+
+public int trap(int[] ar) {
+        int si = 0, ei = ar.length-1;
+        int ans = 0, leftMax = 0, rightMax = 0;
+        while(si < ei){
+            if(ar[si] <= ar[ei]){
+                if(ar[si] >= leftMax){
+                    leftMax = ar[si];
+                }else{
+                    ans += (leftMax-ar[si]);
+                }
+                si++;
+            }else{
+                if(ar[ei] >= rightMax){
+                    rightMax = ar[ei];
+                }else{
+                    ans += (rightMax-ar[ei]);
+                }
+                ei--;
+            }
+        }
+        return ans; 
+    }           
+
+// Chocolate Distribution Problem || Sorting
+
+ public long findMinDiff (ArrayList<Integer> a, int n, int m)
+    {
+        Collections.sort(a);
+        int minValue = Integer.MAX_VALUE;
+        for(int i=0; i<n-m+1; i++){
+            int min = a.get(i);
+            int max = a.get(i+m-1);
+            minValue = Math.min(minValue, max-min);
+        }
+        return minValue;
+    }
+
+// Smallest Subarray with sum greater than X
+
+class Solution {
+
+    public static int smallestSubWithSum(int x, int[] arr) {
+        int si = 0, ei = 0;
+        int sum = 0, minLength = Integer.MAX_VALUE;
+        while(ei < arr.length){
+            sum += arr[ei];
+            while(sum > x){
+                sum -= arr[si];
+                minLength = Math.min(ei-si+1, minLength);
+                si++;
+            }
+            ei++;
+        }
+        if(minLength == Integer.MAX_VALUE) return 0;
+        return minLength;
+    }
+}
+
+
+// Three Way Partitioning
+private void swap(int[] arr, int x, int y){
+        int temp = arr[x];
+        arr[x] = arr[y];
+        arr[y] = temp;
+    }
+    public void threeWayPartition(int arr[], int a, int b)
+    {
+        int x=0, y=0, z=arr.length-1;
+        while(y <= z){
+            if(arr[y] < a){
+                swap(arr, x, y);
+                x++;
+                y++;
+            }else if(arr[y] > b){
+                swap(arr, y, z);
+                z--;
+            }else if(arr[y]>=a && arr[y]<=b){
+                y++;
+            }
+        }
+    }
+
+// Minimum Swaps and K Together
+
+public static int minSwap (int arr[], int n, int k) {
+        int count = 0;
+        for(int val : arr){
+            if(val <= k){
+                count++;
+            }
+        }
+        
+        int i=0, j=0;
+        int ans = 0;
+        while(j<count){
+            if(arr[j] > k){
+                ans++;
+            }
+            j++;
+        }
+        int minAns = ans;
+        while(j<n){
+            if(arr[j] > k){
+                ans++;
+            }
+            if(arr[i] > k){
+                ans--;
+            }
+            minAns = Math.min(ans, minAns);
+            i++; j++;
+        }
+        return minAns;
+    }
+
+// Next Permutation
+
+class Solution {
+    private void swap(int[] ar, int i, int j){
+        int temp = ar[i];
+        ar[i] = ar[j];
+        ar[j] = temp;
+    }
+    private void reverse(int[] ar, int i, int j){
+        while(i<j){
+            swap(ar, i, j);
+            i++;
+            j--;
+        }
+    }
+    public void nextPermutation(int[] ar) {
+        int n = ar.length;
+        int i=n-2;
+        while(i>=0 && ar[i] >= ar[i+1]){
+            i--;
+        }
+        if(i != -1){
+            int j = n-1;
+            while(j>=0 && ar[i] >= ar[j]){
+                j--;
+            }
+            swap(ar, i, j);
+        }
+        reverse(ar, i+1, n-1);
+    }
+}
+
+ 
+// Power of X, N
+
+class Solution {
+    public double myPow(double x, int n) {
+        double ans = 1.0;
+        double nn = n;
+        if(nn < 0) nn *= -1;
+        while(nn > 0){
+            if(nn%2 == 0){
+                x *= x; 
+                nn/=2;
+            }else{
+                ans *= x;
+                nn--;
+            }
+        }
+        return (n>=0) ? ans : 1/ans;
+    }
+}
+
+// Minimum Number of Operations to make array Palindrome
+
+private static int minimumOperationForArrayPalindrome(int[] ar, int n){
+        int ans = 0;
+        int si = 0, ei = n-1;
+        while(si <= ei){
+            if(ar[si] == ar[ei]){
+                si++;
+                ei--;
+            }else if(ar[si] > ar[ei]){
+                ei--;
+                ar[ei] += ar[ei+1];
+                ans++;
+            }else{
+                si++;
+                ar[si] += ar[si-1];
+                ans++;
+            }
+        }
+        return ans;
+    }
+
+// Longest Substring without Repeat
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int ans = 0;
+        int si = 0, ei = 0;
+        HashSet<Character> hs = new HashSet<>();
+        while(ei < s.length()){
+            char ch = s.charAt(ei);
+            if(!hs.contains(ch)){
+                hs.add(ch);
+            }else{
+                while(hs.size()>0 && hs.contains(ch)){
+                    char ch1 = s.charAt(si);
+                    hs.remove(ch1);
+                    si++;
+                }
+                hs.add(ch);
+            }
+            ans = Math.max(ans, hs.size());
+            ei++;
+        }
+        return ans;
+    }
+}
+
+// 
+
+
 // 396 : Rotate Function
 
 //Basic Maths 
@@ -202,77 +1271,29 @@ class Solution {
     }
 }
 
-// Moore's Voting Algorithm : Find an element with occurene more than n/2
+
+
+// Product of Array Except Self
 
 class Solution {
-    public int majorityElement(int[] nums) {
-        int val = nums[0], count = 1;
-        for(int i=1; i<nums.length; i++){
-            if(val == nums[i]){
-                count++;
-            }else{
-                count--;
-            }
-            if(count == 0){
-                val = nums[i];
-                count = 1;
-            }
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int[] rightProd = new int[n];
+        rightProd[n-1] = nums[n-1];
+        for(int i=n-2; i>=-0; i--){
+            rightProd[i] = nums[i]*rightProd[i+1];
         }
-        count = 0;
-        for(int i=0; i<nums.length; i++){
-            if(nums[i] == val){
-                count++;
-            }
+        int leftProd = 1;
+        int[] ans = new int[n];
+        for(int i=0; i<n-1; i++){
+            ans[i] = leftProd * rightProd[i+1];
+            leftProd *= nums[i];
         }
-        return (count >= (nums.length/2)) ? val : -1;
+        ans[n-1] = leftProd;
+        return ans;
     }
 }
 
-// Find an element with occurence more than n/3 
-
-class Solution {
-    public List<Integer> majorityElement(int[] nums) {
-        int val1=nums[0], count1=1, val2=0, count2=0;
-        for(int i=1; i<nums.length; i++){
-            if(val1 == nums[i]){
-                count1++;
-            }else if(val2 == nums[i]){
-                count2++;
-            }else{
-                if(count1 == 0){
-                    val1 = nums[i];
-                    count1 = 1;
-                }else if(count2 == 0){
-                    val2 = nums[i];
-                    count2 = 1;
-                }else{
-                    count1--;
-                    count2--;
-                }
-            }
-            
-        }
-        List<Integer> al = new ArrayList<>();
-        count1 = 0; count2=0;
-        for(int i=0; i<nums.length; i++){
-            if(val1 == nums[i]){
-                count1++;
-            }
-        }
-        for(int i=0; i<nums.length; i++){
-            if(val2 == nums[i]){
-                count2++;
-            }
-        }
-        if(count1 > (nums.length)/3){
-            al.add(val1);
-        }
-        if(count2 > (nums.length)/3 && val1 != val2){
-            al.add(val2);
-        }
-        return al;
-    }
-}
 
 
 // MAX Chunks to make Array Sorted  :::  Chaining Technique
@@ -313,26 +1334,6 @@ class Solution {
     }
 }
 
-// Product of Array Except Self
-
-class Solution {
-    public int[] productExceptSelf(int[] nums) {
-        int n = nums.length;
-        int[] rightProd = new int[n];
-        rightProd[n-1] = nums[n-1];
-        for(int i=n-2; i>=-0; i--){
-            rightProd[i] = nums[i]*rightProd[i+1];
-        }
-        int leftProd = 1;
-        int[] ans = new int[n];
-        for(int i=0; i<n-1; i++){
-            ans[i] = leftProd * rightProd[i+1];
-            leftProd *= nums[i];
-        }
-        ans[n-1] = leftProd;
-        return ans;
-    }
-}
 
 
 // Partition Labels
@@ -397,6 +1398,98 @@ class Solution {
     }
 }
 
+
+//  Minimum Domino Rotations For Equal Row Easy
+
+
+class Solution {
+    public int minDominoRotations(int[] tops, int[] bottoms) {
+        int val1 = tops[0], val2 = bottoms[0];
+        int ans1=0, ans2=0, ans3=0, ans4=0;
+        int n = tops.length;
+        for(int i=0; i<n; i++){
+            System.out.println(ans1+" "+ans2+" "+ans3+" "+ans4);
+            // trying to achieve val1 on top
+            if(ans1 != Integer.MAX_VALUE){
+                if(val1 == tops[i]){
+
+                }else if(val1 == bottoms[i]){
+                    ans1++;
+                }else{
+                    ans1 = Integer.MAX_VALUE;
+                }
+            }
+            // Trying to achieve the val1 on bottom
+            if(ans2 != Integer.MAX_VALUE){
+                if(val1 == bottoms[i]){
+                   
+                }else if(tops[i] == val1){
+                    ans2++;
+                }else{
+                    ans2 = Integer.MAX_VALUE;
+                }
+            }
+            // Trying to achieve the val2 on top
+            if(ans3 != Integer.MAX_VALUE){
+                if(val2 == tops[i]){
+
+                }else if(val2 == bottoms[i]){
+                    ans3++;
+                }else{
+                    ans3 = Integer.MAX_VALUE;
+                }
+            }
+            // Trying to achieve the val2 on bottom
+            if (ans4 != Integer.MAX_VALUE) {
+                if (bottoms[i] == val2) {
+                    // do nothing
+                } else if (tops[i] == val2) {
+                    ans4++;
+                } else {
+                    ans4 = Integer.MAX_VALUE;
+                }
+            }
+        }
+        int ans = Math.min(ans1, Math.min(ans2, Math.min(ans3, ans4)));
+        return ans == Integer.MAX_VALUE ? -1 : ans;
+    }
+}
+
+// Reverse vowles of a string
+
+class Solution {
+    public String reverseVowels(String s) {
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<s.length(); i++)
+        {
+            char ch = s.charAt(i);
+            if(ch=='a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u' ||
+              ch=='A' || ch=='E' || ch=='I' || ch=='O' || ch=='U')
+                sb.append(ch);
+        }
+        StringBuilder ans = new StringBuilder();
+        int j = sb.length()-1;
+        for(int i=0; i<s.length(); i++)
+        {
+            char ch = s.charAt(i);
+            if(ch=='a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u' ||
+              ch=='A' || ch=='E' || ch=='I' || ch=='O' || ch=='U')
+            {
+                ans.append(sb.charAt(j));
+                j--;
+            }
+            else
+            {
+                ans.append(ch);
+            }
+        }
+        return ans.toString();
+        
+    }
+}
+
+
+// 
 
 // Wiggle Sort - 1
 

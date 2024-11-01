@@ -247,6 +247,104 @@ public static void radixSort(int[] arr) {
   }
 
 
+// Finding Media of 2 sorted Arrays of Same Size
+
+// Approach ::: 1 -> Creating a Sorted array and then finding the median
+
+public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int n1 = nums1.length, n2 = nums2.length;
+        //System.out.println(n1 +" "+n2);
+        int[] ar = new int[n1+n2];
+        int i=0, j=0, k=0;
+        while(i<n1 && j<n2){
+            if(nums1[i] <= nums2[j]){
+                ar[k++] = nums1[i++];
+            }else{
+                ar[k++] = nums2[j++];
+            }
+        }
+        while(i < n1){
+            ar[k++] = nums1[i++];
+        }
+        while(j < n2){
+            ar[k++] = nums2[j++];
+        }
+        for(int v : ar){
+            System.out.println(v);
+        }
+        if((n1+n2)%2 == 0){
+            int mid = (n1+n2)/2;
+            return (double)((ar[mid-1]+ar[mid])/2.0);
+        }else{
+            return (double)(ar[(n1+n2-1)/2]);
+        }
+    }
+
+// Approach  ::: 2 -> Finding the elements only without creating the array
+
+public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int val1 = -1, val2 = -1;
+        int n1 = nums1.length, n2 = nums2.length;
+        int cnt = n1;
+        int i=0, j=0;
+        for(int x=0; x<=cnt; x++){
+            val2 = val1;
+            if(i < n1 && j < n2){
+                if(nums1[i] <= nums2[j]){
+                    val1 = nums1[i++];
+                }else{
+                    val1 = nums2[j++];
+                }
+            }
+            else if(i < n1){
+                val1 = nums1[i++];
+            }
+            else if(j < n2){
+                val1 = nums2[j++];
+            }
+            System.out.println(val1 + " " + val2);
+        }
+        System.out.println(val1 + " " + val2);
+        return (double)(val1 + val2)/2.0;
+    }
+
+// Approach 3 : Binary Search Solution || Applicable to both the problems with same and different size of arrays
+
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int n1 = nums1.length, n2 = nums2.length;
+        if(n1 > n2) return findMedianSortedArrays(nums2, nums1);
+        int si = 0, ei = n1;
+        int left = (n1+n2+1)/2;
+        /* Binary Search is based on the number of elements we select from the array1 
+        We have an option to select from 0 element from array1 to all elements from array2
+        if we select 1 eleemts from array1 then all the remaining elements need to be picked from array2
+        */
+        while(si <= ei){
+            int mid = (si + ei) >> 1;
+            int mid2 = left-mid;
+            int l1 = (mid-1)>=0 ? nums1[mid-1] : Integer.MIN_VALUE;
+            int l2 = (mid2-1)>=0 ? nums2[mid2-1] : Integer.MIN_VALUE;
+            int r1 = (mid<n1) ? nums1[mid] : Integer.MAX_VALUE;
+            int r2 = (mid2<n2) ? nums2[mid2] : Integer.MAX_VALUE;
+            if(l1 <= r2 && l2 <= r1){
+                if((n1+n2)%2 == 0){
+                    return (Math.max(l1,l2)+Math.min(r1,r2))/2.0;
+                }else{
+                    return Math.max(l1, l2);
+                }
+            }else if(l1 > r2){
+                ei = mid-1;
+            }else if(l2 > r1){
+                si = mid+1;
+            }
+        }
+        return -1;
+    }
+}
+
+
+
 // Sort 0 - 1
 public static void sort01(int[] arr){
       // 0 to j-1  ->  All Zeroes
