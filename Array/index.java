@@ -1,4 +1,5 @@
 // Rotate an Array
+// Reverse an Array
 
 // Finding Maximum and minimum in an array
 class Solution {
@@ -14,6 +15,71 @@ class Solution {
         return p;
     }
 }
+
+// Rotate an array by 1
+// Rotate an Array by k
+class Solution {
+    public void rotate(int[] nums, int k) {
+        k = k%(nums.length);
+        int[] temp = new int[nums.length];
+        int j=0;
+        for(int i=nums.length-k; i<nums.length; i++){
+            temp[j++] = nums[i];
+        }
+        for(int i=0; i<nums.length-k; i++){
+            temp[j++] = nums[i];
+        }
+        for(int i=0; i<nums.length; i++){
+            nums[i] = temp[i];
+        }
+    }
+}
+
+// Approach 2 :
+class Solution {
+    private void reverse(int[] nums,  int si, int ei){
+        while(si <= ei){
+            int temp = nums[si];
+            nums[si] = nums[ei];
+            nums[ei] = temp;
+            si++;
+            ei--;
+        }
+    }
+    public void rotate(int[] nums, int k) {
+        k = k%(nums.length);
+        reverse(nums, 0, nums.length-1);
+        reverse(nums, 0, k-1);
+        reverse(nums, k, nums.length-1);
+    }
+}
+
+// Find Union and Intersection of 2 sorted arrays
+
+// Second Largest element in an array without sorting
+
+class Solution {
+    public int getSecondLargest(int[] arr) {
+        // Code Here
+        int max = Integer.MIN_VALUE;
+        int sMax = -1;
+        for(int i=0; i<arr.length; i++){
+            if(arr[i] > max){
+                sMax = max;
+                max = arr[i];
+            }
+            if(arr[i] < max && arr[i] > sMax){
+                sMax = arr[i];
+            }
+        }
+        return sMax == Integer.MIN_VALUE ? -1 : sMax;
+    }
+}
+
+//
+
+
+
 
 // Finding Kth Smallest Element in an Array
 
@@ -2166,3 +2232,169 @@ class Solution {
         return ans;
     }
 }
+
+// Text Justification 
+
+
+class Solution {
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        List<String> ans = new ArrayList<>();
+        int i=0, n=words.length;
+        while(i < n){
+            int capacity = 0;
+            int wc = words[i].length();
+            int j = i+1;
+            // Caclucation of the words accomodated in a line
+            while(j<n && ((wc+1+words[j].length()+capacity) <= maxWidth)){
+                capacity++;
+                wc += words[j].length();
+                j++;
+            }
+            // Disribution of space
+            int space = maxWidth - wc;
+            int equal = capacity == 0 ? 0 : space/capacity;
+            int unequal = capacity == 0 ? 0 : space%capacity;
+            // if this is the last line
+            if(j == words.length){
+                equal = 1;
+                unequal = 0;
+            }
+            // Addition of spaces
+            StringBuilder sb = new StringBuilder();
+            for(int k=i; k<j; k++){
+                sb.append(words[k]);
+                // No spaces are needed at the end of the line
+                if(k == j-1){
+                    break;
+                }
+                for(int x=0; x<equal; x++){
+                    sb.append(" ");
+                }
+                if(unequal > 0){
+                    sb.append(" "); 
+                    unequal--;
+                }
+            }
+            i = j;
+            while(sb.length() < maxWidth){
+                sb.append(" ");
+            }
+            ans.add(sb.toString());
+        }
+        return ans;
+    }
+}
+
+
+// Number of Sub-arrays With Odd Sum
+class Solution {
+    public int numOfSubarrays(int[] arr) {
+        long ans = 0;
+        long even = 0, odd = 0;
+        long sum = 0;
+        for(int i=0; i<arr.length; i++){
+            sum += arr[i];
+            if(sum%2 == 0){
+                ans += (odd);
+                even++;
+            }else{
+                ans += (even+1);
+                odd++;
+            }
+        }
+        return (int)(ans%(1e9+7));
+    }
+}
+
+
+// Minimum Number of Moves to Make Palindrome
+
+class Solution {
+    private boolean isValidPalindrome(char[] ar){
+        int[] temp = new int[26];
+        for(int i=0; i<ar.length; i++){
+            temp[ar[i]-'a']++;
+        } 
+        int count = 0;
+        for(int i=0; i<26; i++){
+            if(temp[i]%2 == 1 && count == 0){
+                count = 1;
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
+     public int findKthIndexEqualToLthIndex(char[] ar, int k, int l){
+        while(k > l){
+            if(ar[k] == ar[l]){
+                return k;
+            }
+            k--;
+        }
+        return k;
+    }
+    private void swap(char[] ar, int l){
+        if(l+1 < ar.length){
+            char temp = ar[l];
+            ar[l] = ar[l+1];
+            ar[l+1] = temp;
+        }
+    }
+    public int minMovesToMakePalindrome(String s) {
+        int n = s.length();
+        char[] ar = s.toCharArray();
+        if(isValidPalindrome(ar)){
+            return -1;
+        }
+        int l=0, r=ar.length-1;
+        int ans = 0;
+        while(l < r){
+            if(ar[l] == ar[r]){
+                l++;
+                r--;
+            }else{
+                int k = r;
+                int idx = findKthIndexEqualToLthIndex(ar, k, l);
+                if(idx == l){
+                    ans++;
+                    swap(ar, l);
+                }else{
+                    while(idx < r){
+                        ans++;
+                        swap(ar, idx);
+                        idx++;
+                    }
+                    l++;
+                    r--;
+                }
+            }
+        }
+        return ans;
+    }
+}
+
+
+// Find Index of 0 to be replaced with 1 to get longest continuous sequence of 1s in a binary array
+
+private static int getLongestContinuousOnes(int[] ar, int n){
+        int p_zero = -1;
+        int p_p_zero = -1;
+        int ans = 0;
+        int ansIdx = 0;
+        for(int i=0; i<n; i++){
+            if(ar[i] == 0){
+                if(i-p_p_zero > ans){
+                    ansIdx = p_zero;
+                    ans = i-p_p_zero;
+                }
+                p_p_zero = p_zero;
+                p_zero = i;
+            }
+        }
+        if(n-p_p_zero > ans){
+            ansIdx = p_zero;
+            ans = n-p_p_zero;
+        }
+        return ansIdx;
+    }

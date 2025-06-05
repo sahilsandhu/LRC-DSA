@@ -3,8 +3,8 @@ class Main{
     public static void bubbleSort(int[] arr) {
       // In the bubble sort we always try to move the maximum one to the end of the array from
       // begininng
-      // Thats the reason after each iteration we are aware of the face that the last element of the
-      // array is at its correct position
+      // Thats the reason after each iteration we are aware of the fact that the last element of the
+      // array is at its correct position 
       int n = arr.length;
       for(int i=1; i<n; i++){
           for(int j=0; j<n-i; j++){
@@ -245,6 +245,26 @@ public static void radixSort(int[] arr) {
    }
    print(ans);
   }
+
+
+// Binary Search 
+
+class Solution {
+    public int search(int[] nums, int target) {
+        int si = 0, ei = nums.length-1;
+        while(si <= ei){
+            int mid = (si+ei)/2;
+            if(nums[mid] == target){
+                return mid;
+            }else if(nums[mid] > target){
+                ei = mid-1;
+            }else{
+                si = mid+1;
+            }
+        }
+        return -1;
+    }
+}
 
 
 // Finding Media of 2 sorted Arrays of Same Size
